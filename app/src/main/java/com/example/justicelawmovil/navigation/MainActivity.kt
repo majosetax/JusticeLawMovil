@@ -18,10 +18,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.justicelawmovil.ui.theme.JusticeLawMovilTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        Thread.sleep(3000)
         installSplashScreen()
         setContent {
             JusticeLawMovilTheme {
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun MoviesAppPreview() {
+fun JusticelawPreview() {
     JusticeLawMovilTheme {
         AppNavHost(navController = rememberNavController())
     }

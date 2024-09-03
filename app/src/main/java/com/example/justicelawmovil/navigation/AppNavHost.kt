@@ -31,7 +31,7 @@ fun AppNavHost(
         }
 
         composable( // This method adds the composable to the NavGraphBuilder
-            route = NavigationItem.Home.route // Route for the destination
+            route = NavigationItem.Register.route // Route for the destination
         ) {
             RegisterScreen(navController) // Composable for the destination
         }

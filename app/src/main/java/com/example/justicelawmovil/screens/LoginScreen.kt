@@ -95,7 +95,12 @@ fun LoginScreen(navController: NavController) {
             }
             Spacer(modifier = Modifier.width(8.dp))
             OutlinedButton(
-                onClick = {  },
+                onClick = {
+                    navController.navigate( // Navigate to a route in the current NavGraph
+                        NavigationItem.Register.route
+                    )
+                    // Route defined in AppNavHost
+                },
                 shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .weight(1f)
