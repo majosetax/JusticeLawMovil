@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.justicelawmovil.screens
 
 import androidx.compose.foundation.background
@@ -26,13 +28,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-
+import androidx.compose.runtime.*
 import androidx.compose.material3.*
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-
 import com.example.justicelawmovil.R
 
 @Composable
@@ -166,3 +170,6 @@ fun HomeScreen(navController: NavController) {
 fun HomeScreenPreview() {
     HomeScreen(rememberNavController())
 }
+
+
+
