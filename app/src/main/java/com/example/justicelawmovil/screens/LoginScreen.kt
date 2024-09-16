@@ -153,7 +153,7 @@ fun LoginScreen(navController: NavController) {
         Button(
             onClick = {
                 navController.navigate(
-                    NavigationItem.Register.route
+                    NavigationItem.Home.route
                 )
             },
             modifier = Modifier

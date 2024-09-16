@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.justicelawmovil.R
+import com.example.justicelawmovil.screens.HomeScreen
 import com.example.justicelawmovil.screens.LoginScreen
 import com.example.justicelawmovil.screens.RegisterScreen
 
@@ -36,7 +37,11 @@ fun AppNavHost(
             RegisterScreen(navController) // Composable for the destination
         }
 
-
+        composable( // This method adds the composable to the NavGraphBuilder
+            route = NavigationItem.Home.route // Route for the destination
+        ) {
+            HomeScreen(navController) // Composable for the destination
+        }
 
 
     }
