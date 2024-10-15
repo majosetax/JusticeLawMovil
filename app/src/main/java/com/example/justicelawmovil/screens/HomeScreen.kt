@@ -53,7 +53,38 @@ Text(
         color = Color(0xFF001C36)
     ),  )
     }
-  Box() {               Row(
+
+        val carouselState = rememberCarouselState { 3 }
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            HorizontalMultiBrowseCarousel(
+                state = carouselState,
+                preferredItemWidth = 300.dp,
+                itemSpacing = 10.dp
+            ) { page->
+                Box(modifier = Modifier.size(300.dp)) {
+                    Image(
+                        painter = painterResource(
+                            id = when (page) {
+                                0 -> R.drawable.img_main
+                                1 -> R.drawable.img_main_dos
+                                else -> R.drawable.img_main_dos
+
+                            }
+                        ),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+
+                }
+            }
+        }
+
+  Box() {
+
+
+      Row(
+
 
 
       verticalAlignment = Alignment.CenterVertically,
@@ -62,6 +93,8 @@ Text(
 
 
   )
+
+
 
   {
 
