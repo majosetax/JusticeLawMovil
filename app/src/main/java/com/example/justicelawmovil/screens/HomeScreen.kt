@@ -5,8 +5,6 @@ package com.example.justicelawmovil.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -15,9 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +25,17 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import com.example.justicelawmovil.R
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -37,8 +47,10 @@ fun HomeScreen(navController: NavController) {
     val profileIcon: Painter = painterResource(id = R.drawable.forum) // Icono personalizado para Profile
     val notificationIcon: Painter = painterResource(id = R.drawable.notifications)
     val settingsIcon: Painter = painterResource(id = R.drawable.settings)
+    val menuIcon: Painter = painterResource(id = R.drawable.menu)
 
-    val drawerContent = @androidx.compose.runtime.Composable {
+
+    val drawerContent = @Composable {
         Column(modifier = Modifier.fillMaxSize()) {
             DrawerHeader()
             DrawerMenuItem(icon = homeIcon, label = "Home")
@@ -57,14 +69,14 @@ fun HomeScreen(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "JusticeLaw") },
+                    title = { Box(modifier = Modifier)},
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch {
                                 drawerState.open()
                             }
                         }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                            Icon(painter = menuIcon, contentDescription = "Menu") // Usando tu ícono personalizado
                         }
                     }
                 )
@@ -100,19 +112,76 @@ fun HomeScreen(navController: NavController) {
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()
+                        .padding(24.dp)
                 ) {
+                    // Título y descripción
                     Text(
-                        text = "Preguntas recientes",
+                        modifier = Modifier.padding(top = 40.dp, bottom = 16.dp),
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = Color(0xFF001C36), fontWeight = FontWeight.Bold)) {
+                                append("Justice")
+                            }
+                            withStyle(style = SpanStyle(color = Color(0xFFCF9E3E), fontWeight = FontWeight.Bold)) {
+                                append("Law")
+                            }
+                        },
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 28.sp,
+                        )
+                    )
+
+                    Text(
+                        text = "¡Bienvenidos a JusticeLaw!",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 20.sp,
+                            color = Color(0xFF001C36)
+                        ),
+                        modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+                    )
+
+                    Text(
+                        text = "Tu confianza es nuestra prioridad, y trabajamos incansablemente para obtener los mejores resultados posibles en cada caso. Explora nuestros servicios y descubre cómo podemos ayudarte a navegar por el complejo mundo legal con confianza y tranquilidad.",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontSize = 16.sp,
                             color = Color(0xFF001C36)
                         ),
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
                     )
-                    // Puedes agregar más contenido aquí según lo necesites
+
+                    // Carrusel de imágenes
+                    MyCarousel()
+
+                    Text(
+                        text = "En JusticeLaw, estamos dedicados a proporcionar soluciones legales de alta calidad, combinando experiencia y compromiso para defender tus derechos. Nos especializamos en brindar asesoría y representación en una amplia gama de áreas legales, asegurando que cada cliente reciba la atención personalizada que merece.",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 16.sp,
+                            color = Color(0xFF001C36)
+                        ),
+                        modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+                    )
                 }
             }
         )
+    }
+}
+
+@Composable
+fun MyCarousel() {
+    val carouselItems = listOf(R.drawable.img_main, R.drawable.img_main_dos) // Asegúrate de que estas imágenes existan
+    LazyRow(modifier = Modifier.padding(vertical = 16.dp)) {
+        items(carouselItems) { image ->
+            Box(modifier = Modifier
+                .size(300.dp)
+                .padding(horizontal = 8.dp)) {
+                Image(
+                    painter = painterResource(id = image),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
     }
 }
 
