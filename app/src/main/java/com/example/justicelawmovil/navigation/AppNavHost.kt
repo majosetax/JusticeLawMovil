@@ -12,37 +12,55 @@ import com.example.justicelawmovil.R
 import com.example.justicelawmovil.screens.HomeScreen
 import com.example.justicelawmovil.screens.LoginScreen
 import com.example.justicelawmovil.screens.RegisterScreen
+import com.example.justicelawmovil.screens.UsuarioDetailScreen
+import com.example.justicelawmovil.screens.UsuariosScreen
 
 
 @Composable
 fun AppNavHost(
-    modifier: Modifier = Modifier, // The modifier to be applied to the layout
-    navController: NavHostController, // The navController for this host
-    startDestination: String = NavigationItem.Login.route // Start route
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    startDestination: String = NavigationItem.Login.route
 ) {
-    NavHost( // Provides in place in the Compose hierarchy for self contained navigation to occur.
+    NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable( // This method adds the composable to the NavGraphBuilder
-            route = NavigationItem.Login.route // Route for the destination
+        composable(
+            route = NavigationItem.Login.route
         ) {
-            LoginScreen(navController) // Composable for the destination
+            LoginScreen(navController)
         }
 
-        composable( // This method adds the composable to the NavGraphBuilder
-            route = NavigationItem.Register.route // Route for the destination
+        composable(
+            route = NavigationItem.Register.route
         ) {
-            RegisterScreen(navController) // Composable for the destination
+            RegisterScreen(navController)
         }
 
-        composable( // This method adds the composable to the NavGraphBuilder
-            route = NavigationItem.Home.route // Route for the destination
+        composable(
+            route = NavigationItem.Home.route
         ) {
-            HomeScreen(navController) // Composable for the destination
+            HomeScreen(navController)
         }
 
+        composable(
+            route = NavigationItem.UserList.route
+        )
 
+        {
+            UsuariosScreen(navController)
+        }
+
+        composable(
+            route = "userDetail/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val usuarioId = backStackEntry.arguments?.getInt("id")
+            if (usuarioId != null) {
+                UsuarioDetailScreen(usuarioId)
+            }
+        }
     }
 }
