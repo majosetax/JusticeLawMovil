@@ -1,6 +1,7 @@
 package com.example.justicelawmovil.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -65,48 +68,78 @@ fun ProfileScreen(navController: NavController) {
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
+        TextField(
             value = "",
-            onValueChange = { },
-            label = { androidx.compose.material3.Text("Nombre Completo") },
+            onValueChange = { /* Lógica de cambio */ },
+            label = { Text("Nombre completo") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray.copy(alpha = 0.1f)), // Fondo gris claro
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent, // Quita el borde al estar enfocado
+                unfocusedIndicatorColor = Color.Transparent // Quita el borde al perder foco
+            )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
+        TextField(
             value = "",
-            onValueChange = { },
-            label = { androidx.compose.material3.Text("E-mail") },
+            onValueChange = { /* Lógica de cambio */ },
+            label = { Text("E-mail") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray.copy(alpha = 0.1f)), // Fondo gris claro
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent, // Quita el borde al estar enfocado
+                unfocusedIndicatorColor = Color.Transparent // Quita el borde al perder foco
+            )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
+        TextField(
             value = "",
-            onValueChange = { },
-            label = { androidx.compose.material3.Text("Numero telefónico") },
+            onValueChange = { /* Lógica de cambio */ },
+            label = { Text("Numero Telefonico") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray.copy(alpha = 0.1f)), // Fondo gris claro
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent, // Quita el borde al estar enfocado
+                unfocusedIndicatorColor = Color.Transparent // Quita el borde al perder foco
+            )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
+        TextField(
             value = "",
-            onValueChange = { },
-            label = { androidx.compose.material3.Text("Género") },
+            onValueChange = { /* Lógica de cambio */ },
+            label = { Text("Genero") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray.copy(alpha = 0.1f)), // Fondo gris claro
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent, // Quita el borde al estar enfocado
+                unfocusedIndicatorColor = Color.Transparent // Quita el borde al perder foco
+            )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
+        TextField(
             value = "",
-            onValueChange = { },
-            label = { androidx.compose.material3.Text("Fecha de nacimiento") },
+            onValueChange = { /* Lógica de cambio */ },
+            label = { Text("Fecha de nacimiento") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray.copy(alpha = 0.1f)), // Fondo gris claro
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent, // Quita el borde al estar enfocado
+                unfocusedIndicatorColor = Color.Transparent // Quita el borde al perder foco
+            )
         )
 
         androidx.compose.material3.Button(
