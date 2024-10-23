@@ -3,6 +3,7 @@
 package com.example.justicelawmovil.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -51,7 +52,10 @@ fun HomeScreen(navController: NavController) {
 
 
     val drawerContent = @Composable {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column( modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF003049))
+        ){
             DrawerHeader()
             DrawerMenuItem(icon = homeIcon, label = "Home")
             DrawerMenuItem(icon = profileIcon, label = "Perfil")
@@ -75,7 +79,8 @@ fun HomeScreen(navController: NavController) {
                             scope.launch {
                                 drawerState.open()
                             }
-                        }) {
+                        },
+                            ) {
                             Icon(painter = menuIcon, contentDescription = "Menu") // Usando tu ícono personalizado
                         }
                     }
@@ -87,8 +92,8 @@ fun HomeScreen(navController: NavController) {
                         .padding(16.dp)
                         .height(60.dp)
                         .clip(RoundedCornerShape(25.dp)),
-                    containerColor = Color(0xFF001C36),
-                    contentColor = Color.White
+                    containerColor = Color(0xFFffffff),
+                    contentColor = Color.White,
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -214,7 +219,7 @@ fun DrawerMenuItem(icon: Painter, label: String) {
     ) {
         Icon(painter = icon, contentDescription = null, modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(16.dp))
-        Text(text = label, fontSize = 16.sp)
+        Text(text = label, fontSize = 16.sp, color = Color.White)
     }
 }
 
