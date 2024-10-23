@@ -43,83 +43,70 @@ import com.example.justicelawmovil.R
 fun HomeScreen(navController: NavController) {
     val homeIcon: Painter = painterResource(id = R.drawable.home)
     val searchIcon: Painter = painterResource(id = R.drawable.search)
-    val forumIcon: Painter = painterResource(id = R.drawable.forum)
-    val profileIcon: Painter = painterResource(id = R.drawable.profile)
+    val profileIcon: Painter = painterResource(id = R.drawable.forum)
 
-    Column () {
-Text(
-    text = "Preguntas recientes", style = MaterialTheme.typography.bodyLarge.copy(
-        fontSize = 16.sp,
-        color = Color(0xFF001C36)
-    ),  )
-    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
 
-        val carouselState = rememberCarouselState { 3 }
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            HorizontalMultiBrowseCarousel(
-                state = carouselState,
-                preferredItemWidth = 300.dp,
-                itemSpacing = 10.dp
-            ) { page->
-                Box(modifier = Modifier.size(300.dp)) {
-                    Image(
-                        painter = painterResource(
-                            id = when (page) {
-                                0 -> R.drawable.img_main
-                                1 -> R.drawable.img_main_dos
-                                else -> R.drawable.img_main_dos
+    ) {
 
-                            }
-                        ),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-
+        Text(
+            modifier = Modifier.padding(top = 40.dp, bottom = 16.dp),
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color(0xFF001C36), fontWeight = FontWeight.Bold)) {
+                    append("Justice")
                 }
-            }
-        }
+                withStyle(style = SpanStyle(color = Color(0xFFCF9E3E), fontWeight = FontWeight.Bold)) {
+                    append("Law")
+                }
+            },
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 28.sp,
+            )
+        )
 
-  Box() {
+        Text(
+            text = "¡Bienvenidos a JusticeLaw!",
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 20.sp,
+                color = Color(0xFF001C36)
+
+            ),
+            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+        )
+
+        Text(
+            text = "Tu confianza es nuestra prioridad, y trabajamos incansablemente para obtener los mejores resultados posibles en cada caso. Explora nuestros servicios y descubre cómo podemos ayudarte a navegar por el complejo mundo legal con confianza y tranquilidad.",
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 16.sp,
+                color = Color(0xFF001C36)
+            ),
+            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+        )
+
+        Image(painter = painterResource(id = R.drawable.img_main), contentDescription = "home",
+
+        )
+
+        Text(
+            text = "En JusticeLaw, estamos dedicados a proporcionar soluciones legales de alta calidad, combinando experiencia y compromiso para defender tus derechos. Nos especializamos en brindar asesoría y representación en una amplia gama de áreas legales, asegurando que cada cliente reciba la atención personalizada que merece.",
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 16.sp,
+                color = Color(0xFF001C36)
+            ),
+            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+        )
 
 
-      Row(
-
-
-
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceEvenly,
-      modifier = Modifier.fillMaxSize()
-
-
-  )
-
-
-
-  {
-
-  IconButton(onClick = { /* TODO: profile button click */ }) {
-          Icon(
-              painter = profileIcon,
-              contentDescription = "Profile"
-          )
-      }
-      Text(  text = "Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el...vermas",
-style = MaterialTheme.typography.bodyLarge.copy( fontSize = 8.sp, color = Color(0XFF001C36)  ),
-        modifier = Modifier.padding(top = 8.dp, bottom = 16.dp) .width(200.dp) )
-
-      Text(  text = "+3",
-          style = MaterialTheme.typography.bodyLarge.copy( fontSize = 50.sp, color = Color(0XFF001C36)  )
-      )
-
-
-  }
-
+    }
 
 
     Box(
-         modifier = Modifier
-           .fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
 
     ) {
 
@@ -147,6 +134,8 @@ style = MaterialTheme.typography.bodyLarge.copy( fontSize = 8.sp, color = Color(
             {
 
 
+
+
                 IconButton(onClick = { /* TODO: Handle home button click */ }) {
 
                     Icon(
@@ -165,11 +154,11 @@ style = MaterialTheme.typography.bodyLarge.copy( fontSize = 8.sp, color = Color(
                 }
                 IconButton(onClick = { /* TODO: Handle profile button click */ }) {
                     Icon(
-                        painter = forumIcon,
+                        painter = profileIcon,
                         contentDescription = "Profile"
                     )
                 }
-            } }
+            }
         }
     }
 }
