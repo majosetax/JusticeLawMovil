@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.example.justicelawmovil.R
 import com.example.justicelawmovil.screens.HomeScreen
 import com.example.justicelawmovil.screens.LoginScreen
+import com.example.justicelawmovil.screens.ProfileScreen
 import com.example.justicelawmovil.screens.RegisterScreen
 //import com.example.justicelawmovil.screens.UsuarioDetailScreen
 //import com.example.justicelawmovil.screens.UsuariosScreen
@@ -45,6 +46,11 @@ fun AppNavHost(
             HomeScreen(navController)
         }
 
+        composable(
+            route = NavigationItem.Profile.route
+        ) {
+            ProfileScreen(navController)
+        }
 //        composable(
 //            route = NavigationItem.UserList.route
 //        )

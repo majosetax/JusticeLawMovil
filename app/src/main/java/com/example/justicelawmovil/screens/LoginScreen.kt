@@ -166,22 +166,21 @@ fun LoginScreen(navController: NavController) {
             Text("Iniciar Sesión", color = Color.White)
         }
 
-//        Button(
-//            onClick = {
-//                try {
-//                    navController.navigate(NavigationItem.UserList.route)
-//                } catch (e: Exception) {
-//                    Log.e("NavigationError", "Error al navegar: ${e.message}")
-//                }
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(50.dp),
-//            shape = RoundedCornerShape(50),
-//            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
-//        ) {
-//            Text("Usuarios", color = Color.White)
-//        }
+        Button(
+            onClick = {
+                navController.navigate(
+                    NavigationItem.Profile.route
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
+        ) {
+            Text("Perfil", color = Color.White)
+        }
+
     }
 }
 
