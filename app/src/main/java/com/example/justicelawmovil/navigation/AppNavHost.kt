@@ -12,8 +12,8 @@ import com.example.justicelawmovil.R
 import com.example.justicelawmovil.screens.HomeScreen
 import com.example.justicelawmovil.screens.LoginScreen
 import com.example.justicelawmovil.screens.RegisterScreen
-import com.example.justicelawmovil.screens.UsuarioDetailScreen
-import com.example.justicelawmovil.screens.UsuariosScreen
+//import com.example.justicelawmovil.screens.UsuarioDetailScreen
+//import com.example.justicelawmovil.screens.UsuariosScreen
 
 
 @Composable
@@ -45,22 +45,22 @@ fun AppNavHost(
             HomeScreen(navController)
         }
 
-        composable(
-            route = NavigationItem.UserList.route
-        )
+//        composable(
+//            route = NavigationItem.UserList.route
+//        )
+//
+//        {
+//            UsuariosScreen(navController)
+//        }
 
-        {
-            UsuariosScreen(navController)
-        }
-
-        composable(
-            route = "userDetail/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val usuarioId = backStackEntry.arguments?.getInt("id")
-            if (usuarioId != null) {
-                UsuarioDetailScreen(usuarioId)
-            }
-        }
+//        composable(
+//            route = "userDetail/{id}",
+//            arguments = listOf(navArgument("id") { type = NavType.IntType })
+//        ) { backStackEntry ->
+//            val usuarioId = backStackEntry.arguments?.getInt("id")
+//            if (usuarioId != null) {
+//                UsuarioDetailScreen(usuarioId)
+//            }
+//        }
     }
 }
