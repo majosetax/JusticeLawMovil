@@ -35,6 +35,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import com.example.justicelawmovil.navigation.NavigationItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,7 +81,7 @@ fun HomeScreen(navController: NavController) {
                                 drawerState.open()
                             }
                         },
-                            ) {
+                        ) {
                             Icon(painter = menuIcon, contentDescription = "Menu") // Usando tu ícono personalizado
                         }
                     }
@@ -106,9 +107,11 @@ fun HomeScreen(navController: NavController) {
                         IconButton(onClick = { /* Navegar a Search */ }) {
                             Icon(painter = searchIcon, contentDescription = "Search")
                         }
-                        IconButton(onClick = { /* Navegar a Profile */ }) {
+                        IconButton(onClick = { navController.navigate(NavigationItem.Profile.route) }) {
                             Icon(painter = profileIcon, contentDescription = "Profile")
                         }
+
+
                     }
                 }
             },

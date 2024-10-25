@@ -1,5 +1,6 @@
 package com.example.justicelawmovil.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -164,6 +165,22 @@ fun LoginScreen(navController: NavController) {
         ) {
             Text("Iniciar Sesión", color = Color.White)
         }
+
+        Button(
+            onClick = {
+                navController.navigate(
+                    NavigationItem.Profile.route
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
+        ) {
+            Text("Perfil", color = Color.White)
+        }
+
     }
 }
 
