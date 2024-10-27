@@ -55,155 +55,65 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
 import com.example.justicelawmovil.R
 import com.example.justicelawmovil.navigation.NavigationItem
-import com.example.justicelawmovil.screens.HomeScreen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+
 
 @Composable
 fun Historial(navController: NavController) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
 
-    val helpIcon: Painter = painterResource(id = R.drawable.help)
     val homeIcon: Painter = painterResource(id = R.drawable.home)
     val searchIcon: Painter = painterResource(id = R.drawable.search)
     val forumIcon: Painter = painterResource(id = R.drawable.forum)
-    val quienesSomos: Painter = painterResource(id = R.drawable.quienes_somos)
-    val historialIcon: Painter = painterResource(id = R.drawable.historial)
-    val profileIcon: Painter = painterResource(id = R.drawable.profile)
-    val notificationIcon: Painter = painterResource(id = R.drawable.notifications)
-    val settingsIcon: Painter = painterResource(id = R.drawable.settings)
-    val menuIcon: Painter = painterResource(id = R.drawable.menu)
+    val backIcon: Painter = painterResource(id = R.drawable.volver)
 
 
     @Composable
-    fun DrawerContent(navController: NavController) {
-        val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-
-        Column(
-            modifier = Modifier
-                .width(screenWidth / 1.5f)
-                .fillMaxHeight()
-                .background(Color(0xFF003049))
-        ) {
-            DrawerHeader()
-
-            DrawerMenuItem(icon = homeIcon, label = "Home") {
-                navController.navigate(NavigationItem.Home.route)
-            }
-
-            DrawerMenuItem(icon = profileIcon, label = "Perfil") {
-                navController.navigate(NavigationItem.Profile.route)
-            }
-
-            DrawerMenuItem(icon = notificationIcon, label = "Notificaciones") {
-                navController.navigate(NavigationItem.Profile.route)
-            }
-
-            DrawerMenuItem(icon = historialIcon, label = "Historial") {
-                navController.navigate(NavigationItem.Historial.route)
-            }
-
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-
-            DrawerMenuItem(icon = settingsIcon, label = "Configuración") {
-                navController.navigate(NavigationItem.Configuracion.route)
-            }
-
-            DrawerMenuItem(icon = quienesSomos, label = "Quienes Somos") {
-                navController.navigate(NavigationItem.Configuracion.route)
-            }
-
-            DrawerMenuItem(icon = helpIcon, label = "Ayuda") {
-                navController.navigate(NavigationItem.Profile.route)
-            }
-        }
-    }
-
-
-    @Composable
-    fun DrawerHeader() {
-        val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-
-        Column(
-            modifier = Modifier
-                .width(screenWidth / 1.5f)
-                .padding(top = 20.dp)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.profile),
-                contentDescription = "Avatar",
-                modifier = Modifier.size(72.dp),
-                colorFilter = ColorFilter.tint(Color.White)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            androidx.compose.material3.Text(
-                "Alfonso Juan",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                color = Color.White
-            )
-            androidx.compose.material3.Text("Ver perfil", fontSize = 14.sp, color = Color.White)
-        }
-    }
-
-    @Composable
-    fun DrawerMenuItem(icon: Painter, label: String, onClick: () -> Unit) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onClick)
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            androidx.compose.material3.Icon(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = Color.White
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            androidx.compose.material3.Text(text = label, fontSize = 16.sp, color = Color.White)
-        }
-    }
-
-
-    @Composable
-    fun TopBar(drawerState: DrawerState, menuIcon: Painter, scope: CoroutineScope) {
+    fun TopBar(navController: NavController, backIcon: Painter, searchIcon: Painter) {
         TopAppBar(
-            title = {
-                Box(modifier = Modifier.fillMaxSize())
-            },
-            navigationIcon = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .wrapContentWidth(Alignment.Start)
-                        .padding(vertical = 24.dp)
-                ) {
-                    IconButton(onClick = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }) {
-                        androidx.compose.material3.Icon(
-                            painter = menuIcon,
-                            contentDescription = "Menu",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-            },
             backgroundColor = Color.White,
-            modifier = Modifier.height(90.dp),
+            modifier = Modifier
+                .height(100.dp)
+                .padding(0.dp),
             elevation = 0.dp
-        )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        painter = backIcon,
+                        contentDescription = "Volver",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.Black
+                    )
+                }
+
+                Text(
+                    text = "Historial",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                IconButton(onClick = { /* Lógica de búsqueda */ }) {
+                    Icon(
+                        painter = searchIcon,
+                        contentDescription = "Buscar",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.Black
+                    )
+                }
+            }
+        }
     }
+
+
 
     @Composable
     fun BottomBar(navController: NavController, homeIcon: Painter, searchIcon: Painter, forumIcon: Painter) {
@@ -233,30 +143,139 @@ fun Historial(navController: NavController) {
         }
     }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = { DrawerContent(navController) }
-    ) {
-        Scaffold(
-            topBar = { TopBar(drawerState = drawerState, menuIcon = menuIcon, scope = scope) },
-            bottomBar = { BottomBar(navController = navController, homeIcon = homeIcon, searchIcon = searchIcon, forumIcon = forumIcon) },
-            content = { innerPadding ->
+    Scaffold(
+        topBar = { TopBar(navController = navController, backIcon = backIcon, searchIcon = searchIcon) },
+        bottomBar = { BottomBar(navController = navController, homeIcon = homeIcon, searchIcon = searchIcon, forumIcon = forumIcon) },
+        content = { innerPadding ->
+            val scrollState = rememberScrollState()
 
-                val scrollState = rememberScrollState()
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 20.dp, end = 20.dp)
-                        .verticalScroll(scrollState)
-                        .padding(innerPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 20.dp, end = 20.dp)
+                    .verticalScroll(scrollState)
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.Start
+            ) {
 
+
+                Text(text = "Borrar datos de navegación...", color = Color(0xFFCF9E3E))
+                Spacer(modifier = Modifier.height(14.dp))
+
+
+                Text(text = "12 de abril, 2024", fontSize = 14.sp, color = Color.Gray)
+
+                for (i in 1..4) {
+
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "I", color = Color.White, fontWeight = FontWeight.Bold)
+                        }
+
+                        Row(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Se ha visitado ",
+                                color = Color.Black,
+                                fontSize = 16.sp
+                            )
+                            Text(
+                                text = "La tutela",
+                                color = Color(0xFF00A8FF),
+                                fontSize = 16.sp,
+                                modifier = Modifier
+                                    .clickable(onClick = {
+                                        // Lógica para manejar el clic
+                                    })
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        IconButton(onClick = { /* Lógica para eliminar */ }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.cancelar),
+                                contentDescription = "Eliminar",
+                                modifier = Modifier.size(24.dp),
+
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "11 de abril, 2024", fontSize = 14.sp, color = Color.Gray)
+
+                for (i in 1..4) {
+
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "I", color = Color.White, fontWeight = FontWeight.Bold)
+                        }
+
+                        Row(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Se ha visitado ",
+                                color = Color.Black,
+                                fontSize = 16.sp
+                            )
+                            Text(
+                                text = "La tutela",
+                                color = Color(0xFF00A8FF),
+                                fontSize = 16.sp,
+                                modifier = Modifier
+                                    .clickable(onClick = {
+                                        // Lógica para manejar el clic
+                                    })
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        IconButton(onClick = { /* Lógica para eliminar */ }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.cancelar),
+                                contentDescription = "Eliminar",
+                                modifier = Modifier.size(24.dp),
+
+                                )
+                        }
+                    }
                 }
             }
-        )
-    }
+
+
+
+        }
+    )
 }
 
 

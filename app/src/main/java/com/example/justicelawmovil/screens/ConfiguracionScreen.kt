@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -29,6 +30,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -39,6 +41,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -252,7 +255,230 @@ fun Configuracion(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                }
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.profile),
+                                contentDescription = "Foto de perfil",
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RoundedCornerShape(40.dp))
+                            )
+
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            Column(
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = "Alfonso Juan",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 20.sp
+                                )
+                                Text(
+                                    text = "Ver perfil",
+                                    color = Color(0xFFCF9E3E),
+                                    modifier = Modifier
+                                        .clickable { navController.navigate(NavigationItem.Profile.route) }
+                                )
+                            }
+                        }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp, bottom = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.settings),
+                            contentDescription = "Ajustes",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "Ajustes",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Top
+                    ) {
+                        // Fila de Lenguaje
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.lenguaje),
+                                contentDescription = "Lenguaje",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = "Lenguaje",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(start = 18.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ubicacion),
+                                contentDescription = "Ubicación",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = "Ubicación",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(start = 18.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.notification),
+                                contentDescription = "Notificaciones",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = "Notificaciones",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(start = 18.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.privacidad),
+                                contentDescription = "Privacidad",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = "Privacidad",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(start = 18.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+
+                        @Composable
+                        fun AnonimoRow() {
+
+                            val isChecked = remember { mutableStateOf(false) }
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.anonimo),
+                                    contentDescription = "Estado Anónimo",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = "Estado Anónimo",
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.padding(start = 18.dp)
+                                )
+
+                                Spacer(modifier = Modifier.weight(1f))
+
+                                // Checkbox de activación/desactivación con color personalizado
+                                Checkbox(
+                                    checked = isChecked.value,
+                                    onCheckedChange = { isChecked.value = it },
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    colors = androidx.compose.material3.CheckboxDefaults.colors(checkedColor = Color(0xFF003049))
+                                )
+                            }
+                        }
+
+                        AnonimoRow()
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.acerca),
+                                contentDescription = "Sobre la Aplicación",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = "Sobre la Aplicación",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(start = 18.dp)
+                            )
+                        }
+
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.cerrar_sesion),
+                                contentDescription = "Cerrar Sesión",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = "Cerrar Sesión",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(start = 18.dp)
+                            )
+                        }
+                    }
+
+
+                    }
+
             }
         )
     }
