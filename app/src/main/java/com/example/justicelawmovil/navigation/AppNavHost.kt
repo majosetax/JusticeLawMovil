@@ -9,13 +9,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.justicelawmovil.R
+import com.example.justicelawmovil.screens.Configuracion
+import com.example.justicelawmovil.screens.Historial
 import com.example.justicelawmovil.screens.HomeScreen
 import com.example.justicelawmovil.screens.LoginScreen
+import com.example.justicelawmovil.screens.PerfilAbogado
 import com.example.justicelawmovil.screens.ProfileScreen
 import com.example.justicelawmovil.screens.RegisterScreen
-//import com.example.justicelawmovil.screens.UsuarioDetailScreen
-//import com.example.justicelawmovil.screens.UsuariosScreen
-
+import com.example.justicelawmovil.screens.UserListScreen
+import com.example.justicelawmovil.screens.VerPerfilAbogado
 
 @Composable
 fun AppNavHost(
@@ -51,22 +53,32 @@ fun AppNavHost(
         ) {
             ProfileScreen(navController)
         }
-//        composable(
-//            route = NavigationItem.UserList.route
-//        )
-//
-//        {
-//            UsuariosScreen(navController)
-//        }
 
-//        composable(
-//            route = "userDetail/{id}",
-//            arguments = listOf(navArgument("id") { type = NavType.IntType })
-//        ) { backStackEntry ->
-//            val usuarioId = backStackEntry.arguments?.getInt("id")
-//            if (usuarioId != null) {
-//                UsuarioDetailScreen(usuarioId)
-//            }
-//        }
+        composable(route = NavigationItem.UserList.route) { // Nueva pantalla
+            UserListScreen(navController)
+        }
+
+        composable(
+            route = NavigationItem.VerPerfilAbogado.route
+        ) {
+            VerPerfilAbogado(navController)
+        }
+
+        composable(
+            route = NavigationItem.PerfilAbogado.route
+        ) {
+            PerfilAbogado(navController)
+        }
+
+        composable(
+            route = NavigationItem.Historial.route
+        ) {
+            Historial(navController)
+        }
+
+        composable(route = NavigationItem.Configuracion.route) { // Nueva pantalla
+            Configuracion(navController)
+        }
+
     }
 }

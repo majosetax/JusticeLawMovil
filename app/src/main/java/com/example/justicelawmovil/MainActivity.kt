@@ -20,6 +20,7 @@ import com.example.justicelawmovil.navigation.AppNavHost
 import com.example.justicelawmovil.ui.theme.JusticeLawMovilTheme
 
 class MainActivity : ComponentActivity() {
+    val urlBase = "http://api.justicelaw.test/v1/"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
