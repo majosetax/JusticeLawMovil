@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -39,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -312,7 +314,6 @@ fun Configuracion(navController: NavController) {
                             .padding(16.dp),
                         verticalArrangement = Arrangement.Top
                     ) {
-                        // Fila de Lenguaje
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -393,13 +394,12 @@ fun Configuracion(navController: NavController) {
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
 
                         @Composable
                         fun AnonimoRow() {
-
-                            val isChecked = remember { mutableStateOf(false) }
+                            val isOn = remember { mutableStateOf(false) }
 
                             Row(
                                 modifier = Modifier
@@ -420,19 +420,22 @@ fun Configuracion(navController: NavController) {
 
                                 Spacer(modifier = Modifier.weight(1f))
 
-                                // Checkbox de activación/desactivación con color personalizado
-                                Checkbox(
-                                    checked = isChecked.value,
-                                    onCheckedChange = { isChecked.value = it },
+                                Switch(
+                                    checked = isOn.value,
+                                    onCheckedChange = { isOn.value = it },
                                     modifier = Modifier.padding(end = 8.dp),
-                                    colors = androidx.compose.material3.CheckboxDefaults.colors(checkedColor = Color(0xFF003049))
+                                    colors = androidx.compose.material.SwitchDefaults.colors(
+                                        checkedThumbColor = Color(0xFF003049),
+                                        uncheckedThumbColor = Color.Gray
+                                    )
                                 )
                             }
                         }
 
+
                         AnonimoRow()
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
 
                         Row(
