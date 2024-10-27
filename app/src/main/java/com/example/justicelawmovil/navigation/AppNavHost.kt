@@ -12,6 +12,7 @@ import com.example.justicelawmovil.R
 import com.example.justicelawmovil.screens.Configuracion
 import com.example.justicelawmovil.screens.Historial
 import com.example.justicelawmovil.screens.HomeScreen
+import com.example.justicelawmovil.screens.Informacion
 import com.example.justicelawmovil.screens.LoginScreen
 import com.example.justicelawmovil.screens.PerfilAbogado
 import com.example.justicelawmovil.screens.ProfileScreen
@@ -80,5 +81,8 @@ fun AppNavHost(
             Configuracion(navController)
         }
 
+        composable(route=NavigationItem.Informacion.route){
+            Informacion(navController)
+        }
     }
 }

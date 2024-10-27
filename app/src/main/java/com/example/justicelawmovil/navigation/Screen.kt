@@ -11,6 +11,7 @@ enum class Screen { // Names to identify the screens
     PERFIL_ABOGADO,
     HISTORIAL,
     CONFIGURACION,
+    INFORMACION,
 }
 
 // Objects to identify where navigate
@@ -24,5 +25,6 @@ sealed class NavigationItem(val route: String) {
     object VerPerfilAbogado: NavigationItem(Screen.VER_PERFIL_ABOGADO.name)
     object PerfilAbogado: NavigationItem(Screen.PERFIL_ABOGADO.name)
     object Historial: NavigationItem(Screen.HISTORIAL.name)
-    object Configuracion: NavigationItem(Screen.CONFIGURACION.name) // Nu
+    object Configuracion: NavigationItem(Screen.CONFIGURACION.name)
+    object Informacion:NavigationItem(Screen.INFORMACION.name)
 }

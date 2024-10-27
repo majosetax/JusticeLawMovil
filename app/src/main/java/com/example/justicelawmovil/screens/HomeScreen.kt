@@ -195,7 +195,7 @@ fun HomeScreen(navController: NavController) {
                 IconButton(onClick = { navController.navigate(NavigationItem.Home.route) }) {
                     Icon(painter = homeIcon, contentDescription = "Home", tint = Color.White)
                 }
-                IconButton(onClick = { /* Boton informaciones */ }) {
+                IconButton(onClick = { navController.navigate(NavigationItem.Informacion.route) }) {
                     Icon(painter = searchIcon, contentDescription = "Search", tint = Color.White)
                 }
                 IconButton(onClick = { /* Acción del botón de foro */ }) {
