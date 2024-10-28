@@ -12,7 +12,10 @@ enum class Screen { // Names to identify the screens
     HISTORIAL,
     CONFIGURACION,
     INFORMACION,
-    NOTIFICATION
+    NOTIFICATION,
+    OLVIDO_CONTRASENA,
+    OLVIDO_CONTRASENA_EMAIL,
+    OLVIDO_CONTRASENA_TELEFN
 }
 
 // Objects to identify where navigate
@@ -29,4 +32,7 @@ sealed class NavigationItem(val route: String) {
     object Configuracion: NavigationItem(Screen.CONFIGURACION.name)
     object Informacion:NavigationItem(Screen.INFORMACION.name)
     object Notification:NavigationItem(Screen.NOTIFICATION.name)
+    object OlvidoContrasena:NavigationItem(Screen.OLVIDO_CONTRASENA.name)
+    object OlvidoContrasenaEmail:NavigationItem(Screen.OLVIDO_CONTRASENA_EMAIL.name)
+    object OlvidoContrasenaTelefn:NavigationItem(Screen.OLVIDO_CONTRASENA_TELEFN.name)
 }

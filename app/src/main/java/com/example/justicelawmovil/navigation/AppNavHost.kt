@@ -13,6 +13,9 @@ import com.example.justicelawmovil.screens.HomeScreen
 import com.example.justicelawmovil.screens.Informacion
 import com.example.justicelawmovil.screens.LoginScreen
 import com.example.justicelawmovil.screens.NotificationsScreen
+import com.example.justicelawmovil.screens.OlvidoContrasena
+import com.example.justicelawmovil.screens.OlvidoContrasenaEmail
+import com.example.justicelawmovil.screens.OlvidoContrasenaTelefn
 import com.example.justicelawmovil.screens.PerfilAbogado
 import com.example.justicelawmovil.screens.ProfileScreen
 import com.example.justicelawmovil.screens.RegisterScreen
@@ -89,6 +92,21 @@ fun AppNavHost(
         ) {
             NotificationsScreen(navController)
         }
+        composable(
+            route = NavigationItem.OlvidoContrasena.route
+        ) {
+            OlvidoContrasena(navController)
+        }
 
+        composable(
+            route = NavigationItem.OlvidoContrasenaEmail.route
+        ) {
+            OlvidoContrasenaEmail(navController)
+        }
+        composable(
+            route = NavigationItem.OlvidoContrasenaTelefn.route
+        ) {
+            OlvidoContrasenaTelefn(navController)
+        }
     }
 }
