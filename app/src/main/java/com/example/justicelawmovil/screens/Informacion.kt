@@ -199,7 +199,7 @@ fun SearchBar() {
         placeholder = { Text("Buscar...") },
         leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Buscar", tint = Color.Gray) },
         modifier = Modifier
-            .width(500.dp)
+            .width(500.dp)//tamaño
             .height(40.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(Color.White)
