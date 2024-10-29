@@ -21,6 +21,9 @@ enum class Screen { // Names to identify the screens
     OLVIDO_CONTRASENA_NUEVA,
     REESTABLECIMIENTO_EXITOSO,
     PERFIL_RESPUESTA_ABOGADO,
+    FORO,
+    QUIENES_SOMOS,
+    CALENDARIO,
 }
 
 // Objects to identify where navigate
@@ -45,5 +48,8 @@ sealed class NavigationItem(val route: String) {
     object OlvidoContrasenaNueva:NavigationItem(Screen.OLVIDO_CONTRASENA_NUEVA.name)
     object ReestablecimientoExitoso:NavigationItem(Screen.REESTABLECIMIENTO_EXITOSO.name)
     object PerfilRespuestaAbogado:NavigationItem(Screen.PERFIL_RESPUESTA_ABOGADO.name)
+    object Foro:NavigationItem(Screen.FORO.name)
+    object QuienesSomos:NavigationItem(Screen.QUIENES_SOMOS.name)
+    object Calendario:NavigationItem(Screen.CALENDARIO.name)
 
 }

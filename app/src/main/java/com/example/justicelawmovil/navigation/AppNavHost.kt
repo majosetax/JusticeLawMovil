@@ -7,7 +7,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.justicelawmovil.model.NotificationModel
+import com.example.justicelawmovil.screens.AboutUsScreen
+import com.example.justicelawmovil.screens.CalendarioScreen
 import com.example.justicelawmovil.screens.Configuracion
+import com.example.justicelawmovil.screens.ForumScreen
 import com.example.justicelawmovil.screens.Historial
 import com.example.justicelawmovil.screens.HomeScreen
 import com.example.justicelawmovil.screens.Informacion
@@ -140,6 +143,24 @@ fun AppNavHost(
             route = NavigationItem.PerfilRespuestaAbogado.route
         ) {
             PerfilRespuestaAbogado(navController)
+        }
+
+        composable(
+            route = NavigationItem.Foro.route
+        ) {
+            ForumScreen(navController)
+        }
+
+        composable(
+            route = NavigationItem.QuienesSomos.route
+        ) {
+            AboutUsScreen(navController)
+        }
+
+        composable(
+            route = NavigationItem.Calendario.route
+        ) {
+            CalendarioScreen(navController)
         }
         
     }

@@ -186,20 +186,7 @@ fun LoginScreen(navController: NavController) {
 //        }
 
 
-        Button(
-            onClick = {
-                navController.navigate(
-                    NavigationItem.VerPerfilAbogado.route
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
-        ) {
-            Text("Ver perfil", color = Color.White)
-        }
+
 
     }
 }

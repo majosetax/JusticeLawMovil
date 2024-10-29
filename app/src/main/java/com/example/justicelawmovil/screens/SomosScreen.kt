@@ -3,7 +3,9 @@ package com.example.justicelawmovil.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,15 +18,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.justicelawmovil.R
 
 @Composable
-fun AboutUsScreen() {
+fun AboutUsScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF5F5F5)) // Fondo claro
             .padding(horizontal = 24.dp, vertical = 16.dp)
+            .padding(top = 40.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         // Sección de Encabezado
         Text(
@@ -137,5 +143,5 @@ fun ValueCard(title: String, description: String, iconResId: Int) {
 @Preview(showBackground = true)
 @Composable
 fun AboutUsScreenPreview() {
-    AboutUsScreen()
+    AboutUsScreen(rememberNavController())
 }
