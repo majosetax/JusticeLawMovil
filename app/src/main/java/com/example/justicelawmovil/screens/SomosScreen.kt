@@ -55,7 +55,7 @@ fun AboutUsScreen() {
 
         // Sección de Descripción
         Text(
-            text = "Nuestro Equipo",
+            text = "Nuestro Equip0",
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color(0xFF003049),
