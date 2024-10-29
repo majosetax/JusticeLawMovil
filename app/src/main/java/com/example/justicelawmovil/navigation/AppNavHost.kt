@@ -4,16 +4,18 @@ package com.example.justicelawmovil.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.example.justicelawmovil.R
+import com.example.justicelawmovil.model.NotificationModel
 import com.example.justicelawmovil.screens.Configuracion
 import com.example.justicelawmovil.screens.Historial
 import com.example.justicelawmovil.screens.HomeScreen
 import com.example.justicelawmovil.screens.Informacion
 import com.example.justicelawmovil.screens.LoginScreen
+import com.example.justicelawmovil.screens.NotificationsScreen
+import com.example.justicelawmovil.screens.OlvidoContrasena
+import com.example.justicelawmovil.screens.OlvidoContrasenaEmail
+import com.example.justicelawmovil.screens.OlvidoContrasenaTelefn
 import com.example.justicelawmovil.screens.PerfilAbogado
 import com.example.justicelawmovil.screens.ProfileScreen
 import com.example.justicelawmovil.screens.RegisterScreen
@@ -83,6 +85,28 @@ fun AppNavHost(
 
         composable(route=NavigationItem.Informacion.route){
             Informacion(navController)
+        }
+
+        composable(
+            route = NavigationItem.Notification.route
+        ) {
+            NotificationsScreen(navController)
+        }
+        composable(
+            route = NavigationItem.OlvidoContrasena.route
+        ) {
+            OlvidoContrasena(navController)
+        }
+
+        composable(
+            route = NavigationItem.OlvidoContrasenaEmail.route
+        ) {
+            OlvidoContrasenaEmail(navController)
+        }
+        composable(
+            route = NavigationItem.OlvidoContrasenaTelefn.route
+        ) {
+            OlvidoContrasenaTelefn(navController)
         }
     }
 }

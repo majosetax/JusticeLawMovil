@@ -81,8 +81,8 @@ fun HomeScreen(navController: NavController) {
                 navController.navigate(NavigationItem.Profile.route)
             }
 
-            DrawerMenuItem(icon = notificationIcon, label = "Notificaciones") {
-                navController.navigate(NavigationItem.Profile.route)
+            DrawerMenuItem(icon = notificationIcon, label = "Notification") {
+                navController.navigate(NavigationItem.Notification.route)
             }
 
             DrawerMenuItem(icon = historialIcon, label = "Historial") {
