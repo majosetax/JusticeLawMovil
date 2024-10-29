@@ -399,7 +399,7 @@ fun VerPerfilAbogado(navController: NavController) {
 
                     when (selectedSection) {
                         "Sobre Mi" -> {
-                            SobreMiContent()
+                            SobreMiContent(navController = navController)
                         }
                         "Hoja de Vida" -> {
                             HojaDeVidaContent()
@@ -416,7 +416,7 @@ fun VerPerfilAbogado(navController: NavController) {
 }
 
 @Composable
-fun SobreMiContent() {
+fun SobreMiContent(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -466,7 +466,7 @@ fun SobreMiContent() {
         Text(text = "Actividad", fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(8.dp))
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription = "Agregar")
-            Text(text = "Ver el historial de asesoramiento legal", color = Color(0xFF00A8FF), modifier = Modifier.clickable { /* Acción */ })
+            Text(text = "Ver el historial de asesoramiento legal", color = Color(0xFF00A8FF), modifier = Modifier.clickable { navController.navigate(NavigationItem.PerfilRespuestaAbogado.route) })
         }
     }
 }
@@ -536,14 +536,13 @@ fun ReseñasContent() {
                     placeholder = { Text("Escribe tu reseña") },
                     modifier = Modifier.fillMaxWidth()
                 )
-                // Estrellas para calificación
-                // Implementación de las estrellas
+
                 Row {
                     repeat(5) {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Calificación",
-                            tint = Color.White,
+                            tint = Color.Gray,
                             modifier = Modifier.clickable { /* Acción para seleccionar estrella */ }
                         )
                     }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material3.ButtonDefaults
@@ -20,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -31,7 +29,7 @@ import com.example.justicelawmovil.R
 import com.example.justicelawmovil.navigation.NavigationItem
 
 @Composable
-fun OlvidoContrasenaEmail(navController: NavController) {
+fun ReestablecimientoExitoso(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,7 +37,6 @@ fun OlvidoContrasenaEmail(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-
         Icon(
             painter = painterResource(id = R.drawable.volver), // Cambia esto a tu ícono de flecha hacia atrás
             contentDescription = "Back",
@@ -54,35 +51,18 @@ fun OlvidoContrasenaEmail(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
 
+
         Text(
-            text = "¿Olvidaste tu contraseña?",
+            text = "¡Reestablecimiento exitoso!",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF001C36)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = "Ingresa la dirección de correo electrónico asociada a tu cuenta.",
+            text = "Tu contraseña ha sido restablecida con éxito. Por favor, inicia sesión con tu nueva contraseña para acceder a tu cuenta.",
             fontSize = 14.sp,
             color = Color(0xFF001C36)
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "Email",
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.align(Alignment.Start)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        BasicTextField(
-            value = TextFieldValue(""),
-            onValueChange = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .padding(horizontal = 8.dp)
-                .border(1.dp, Color.Gray)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -90,7 +70,7 @@ fun OlvidoContrasenaEmail(navController: NavController) {
         androidx.compose.material3.Button(
             onClick = {
                 navController.navigate(
-                    NavigationItem.OlvidoContrasenaCodEmail.route
+                    NavigationItem.Login.route
                 )
             },
             modifier = Modifier
@@ -99,8 +79,7 @@ fun OlvidoContrasenaEmail(navController: NavController) {
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
         ) {
-            androidx.compose.material3.Text("Continuar", color = Color.White)
+            androidx.compose.material3.Text("Iniciar sesión", color = Color.White)
         }
     }
 }
-

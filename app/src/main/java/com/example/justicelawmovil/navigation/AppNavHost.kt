@@ -14,10 +14,15 @@ import com.example.justicelawmovil.screens.Informacion
 import com.example.justicelawmovil.screens.LoginScreen
 import com.example.justicelawmovil.screens.NotificationsScreen
 import com.example.justicelawmovil.screens.OlvidoContrasena
+import com.example.justicelawmovil.screens.OlvidoContrasenaCodEmail
+import com.example.justicelawmovil.screens.OlvidoContrasenaCodTel
 import com.example.justicelawmovil.screens.OlvidoContrasenaEmail
+import com.example.justicelawmovil.screens.OlvidoContrasenaNueva
 import com.example.justicelawmovil.screens.OlvidoContrasenaTelefn
 import com.example.justicelawmovil.screens.PerfilAbogado
+import com.example.justicelawmovil.screens.PerfilRespuestaAbogado
 import com.example.justicelawmovil.screens.ProfileScreen
+import com.example.justicelawmovil.screens.ReestablecimientoExitoso
 import com.example.justicelawmovil.screens.RegisterScreen
 import com.example.justicelawmovil.screens.UserListScreen
 import com.example.justicelawmovil.screens.VerPerfilAbogado
@@ -108,5 +113,34 @@ fun AppNavHost(
         ) {
             OlvidoContrasenaTelefn(navController)
         }
+
+        composable(
+            route = NavigationItem.OlvidoContrasenaCodEmail.route
+        ) {
+            OlvidoContrasenaCodEmail(navController)
+        }
+        composable(
+            route = NavigationItem.OlvidoContrasenaCodTel.route
+        ) {
+            OlvidoContrasenaCodTel(navController)
+        }
+
+        composable(
+            route = NavigationItem.OlvidoContrasenaNueva.route
+        ) {
+            OlvidoContrasenaNueva(navController)
+        }
+        composable(
+            route = NavigationItem.ReestablecimientoExitoso.route
+        ) {
+            ReestablecimientoExitoso(navController)
+        }
+
+        composable(
+            route = NavigationItem.PerfilRespuestaAbogado.route
+        ) {
+            PerfilRespuestaAbogado(navController)
+        }
+        
     }
 }

@@ -15,7 +15,12 @@ enum class Screen { // Names to identify the screens
     NOTIFICATION,
     OLVIDO_CONTRASENA,
     OLVIDO_CONTRASENA_EMAIL,
-    OLVIDO_CONTRASENA_TELEFN
+    OLVIDO_CONTRASENA_TELEFN,
+    OLVIDO_CONTRASENA_COD_EMAIL,
+    OLVIDO_CONTRASENA_COD_TELEFN,
+    OLVIDO_CONTRASENA_NUEVA,
+    REESTABLECIMIENTO_EXITOSO,
+    PERFIL_RESPUESTA_ABOGADO,
 }
 
 // Objects to identify where navigate
@@ -35,4 +40,10 @@ sealed class NavigationItem(val route: String) {
     object OlvidoContrasena:NavigationItem(Screen.OLVIDO_CONTRASENA.name)
     object OlvidoContrasenaEmail:NavigationItem(Screen.OLVIDO_CONTRASENA_EMAIL.name)
     object OlvidoContrasenaTelefn:NavigationItem(Screen.OLVIDO_CONTRASENA_TELEFN.name)
+    object OlvidoContrasenaCodEmail:NavigationItem(Screen.OLVIDO_CONTRASENA_COD_EMAIL.name)
+    object OlvidoContrasenaCodTel:NavigationItem(Screen.OLVIDO_CONTRASENA_COD_TELEFN.name)
+    object OlvidoContrasenaNueva:NavigationItem(Screen.OLVIDO_CONTRASENA_NUEVA.name)
+    object ReestablecimientoExitoso:NavigationItem(Screen.REESTABLECIMIENTO_EXITOSO.name)
+    object PerfilRespuestaAbogado:NavigationItem(Screen.PERFIL_RESPUESTA_ABOGADO.name)
+
 }

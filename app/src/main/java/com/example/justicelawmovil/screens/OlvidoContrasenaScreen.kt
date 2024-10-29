@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.justicelawmovil.R
 import com.example.justicelawmovil.navigation.NavigationItem
 
 @Composable
@@ -22,16 +23,17 @@ fun OlvidoContrasena(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(top = 36.dp, start = 20.dp, end = 20.dp),
     ) {
         // Back Arrow
         Icon(
-            painter = painterResource(id = android.R.drawable.ic_media_previous), // Cambia esto a tu ícono de flecha hacia atrás
+            painter = painterResource(id = R.drawable.volver), // Cambia esto a tu ícono de flecha hacia atrás
             contentDescription = "Back",
             modifier = Modifier
+                .align(Alignment.Start)
                 .size(24.dp)
                 .clickable {
-                    navController.popBackStack() // Navega hacia atrás en la pila de navegación
+                    navController.popBackStack()
                 }
         )
 
@@ -42,7 +44,7 @@ fun OlvidoContrasena(navController: NavController) {
             text = "¿Olvidaste tu contraseña?",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1D2A44), // Color similar al de la imagen
+            color = Color(0xFF001C36),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
@@ -53,7 +55,7 @@ fun OlvidoContrasena(navController: NavController) {
         Text(
             text = "Recibir código de verificación por:",
             fontSize = 16.sp,
-            color = Color.Gray,
+            color = Color(0xFF001C36),
             modifier = Modifier
                 .padding(bottom = 16.dp)
         )
