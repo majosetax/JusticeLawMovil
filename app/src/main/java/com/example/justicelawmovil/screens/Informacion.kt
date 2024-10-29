@@ -180,7 +180,7 @@ fun Informacion(navController: NavController){
                     .fillMaxSize()
                     .background(Color.White)
                 ) {
-                    SearchBar()
+                    SearchBarInformacion()
                     Spacer(modifier = Modifier.height(8.dp))
                     CategoriesRow()
                     Spacer(modifier = Modifier.height(8.dp))
@@ -192,7 +192,7 @@ fun Informacion(navController: NavController){
 }
 
 @Composable
-fun SearchBar() {
+fun SearchBarInformacion() {
     TextField(
         value = "",
         onValueChange = { /* Cambia el texto de búsqueda */ },
