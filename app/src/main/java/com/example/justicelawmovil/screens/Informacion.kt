@@ -2,25 +2,16 @@ package com.example.justicelawmovil.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -29,17 +20,10 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -107,6 +91,7 @@ fun Informacion(navController: NavController){
             }
         }
     }
+
     @Composable
     fun DrawerHeader() {
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -137,25 +122,25 @@ fun Informacion(navController: NavController){
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            androidx.compose.material3.Icon(painter = icon, contentDescription = null, modifier = Modifier.size(24.dp), tint = Color.White)
+            Icon(painter = icon, contentDescription = null, modifier = Modifier.size(24.dp), tint = Color.White)
             Spacer(modifier = Modifier.width(16.dp))
             Text(text = label, fontSize = 16.sp, color = Color.White)
         }
     }
 
     ModalNavigationDrawer(
-        drawerState=drawerState,
+        drawerState = drawerState,
         drawerContent = { DrawerContent(navController) }
     ) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "Información") },
+                    title = { Text(text = "Informaciones", fontWeight = FontWeight.Bold) },
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch { drawerState.open() }
                         }) {
-                            androidx.compose.material3.Icon(painter = menuIcon, contentDescription = "Menu", modifier = Modifier.size(24.dp))
+                            Icon(painter = menuIcon, contentDescription = "Menu", modifier = Modifier.size(24.dp))
                         }
                     },
                     backgroundColor = Color.White,
@@ -178,44 +163,28 @@ fun Informacion(navController: NavController){
                         modifier = Modifier.fillMaxSize()
                     ) {
                         IconButton(onClick = { navController.navigate(NavigationItem.Home.route) }) {
-                            androidx.compose.material3.Icon(painter = homeIcon, contentDescription = "Home", tint = Color.White)
+                            Icon(painter = homeIcon, contentDescription = "Home", tint = Color.White)
                         }
                         IconButton(onClick = { /* Acción de búsqueda */ }) {
-                            androidx.compose.material3.Icon(painter = searchIcon, contentDescription = "Search", tint = Color.White)
+                            Icon(painter = searchIcon, contentDescription = "Search", tint = Color.White)
                         }
                         IconButton(onClick = { /* Acción del foro */ }) {
-                            androidx.compose.material3.Icon(painter = forumIcon, contentDescription = "Foro", tint = Color.White)
+                            Icon(painter = forumIcon, contentDescription = "Foro", tint = Color.White)
                         }
                     }
                 }
             },
             content = { innerPadding ->
-                val scrollState = rememberScrollState()
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(20.dp)
-                        .verticalScroll(rememberScrollState())
+                Column(modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(Color.White)
                 ) {
-                    TopBar()  // Barra superior de búsqueda y filtros
-
-                    // Lista de los artículos
-                    val articles = listOf(
-                        Article(R.drawable.accidente, "Guía completa sobre los pasos a seguir", "Entra y descubre la información necesaria...", "12 Sept, 2023"),
-                        Article(R.drawable.consumidor, "Los derechos del consumidor", "Conoce tus derechos como consumidor y aprende cómo...", "11 Sept, 2023"),
-                        Article(R.drawable.negocio, "Aspectos legales para iniciar", "Aprende los aspectos legales fundamentales al iniciar un negocio...", "10 Sept, 2023"),
-                        Article(R.drawable.despido, "Qué hacer en caso de un despido", "Explora tus opciones legales y los pasos a seguir...", "9 Sept, 2023")
-                    )
-
-                    LazyColumn(contentPadding = innerPadding) {
-                        items(articles) { article ->
-                            ArticleItem(article = article) {
-                                // Acción al hacer clic en un artículo, puedes personalizar esto si necesitas navegación adicional
-                            }
-                            Divider(color = Color.LightGray, thickness = 0.5.dp)
-                        }
-                    }
+                    SearchBar()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    CategoriesRow()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ArticlesList()
                 }
             }
         )
@@ -223,56 +192,110 @@ fun Informacion(navController: NavController){
 }
 
 @Composable
-fun TopBar() {
-    var searchQuery by remember { mutableStateOf("") }
-    Column(modifier = Modifier.padding(16.dp)) {
-        TextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            placeholder = { Text("Buscar...") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White, RoundedCornerShape(8.dp)),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
+fun SearchBar() {
+    TextField(
+        value = "",
+        onValueChange = { /* Cambia el texto de búsqueda */ },
+        placeholder = { Text("Buscar...") },
+        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Buscar", tint = Color.Gray) },
+        modifier = Modifier
+            .width(500.dp)
+            .height(40.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(Color.White)
+            .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
+            .padding(8.dp),
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            textColor = Color.Black
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            listOf("Todos", "Comercial", "Laboral", "Familiar", "Penal", "Civil", "Inmobiliario").forEach { category ->
-                Text(
-                    text = category,
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier.clickable { /* Acción al hacer clic en la categoría */ }
-                )
-            }
+    )
+}
+
+@Composable
+fun CategoriesRow() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        val categories = listOf("Todos", "Comercial", "Laboral", "Familiar", "Penal", "Civil", "Inmobiliario")
+        categories.forEach { category ->
+            Text(
+                text = category,
+                modifier = Modifier.padding(horizontal = 8.dp),
+                color = Color.Black
+            )
+        }
+    }
+}
+
+data class Article(val title: String, val description: String, val date: String, val imageRes: Int)
+
+@Composable
+fun ArticlesList() {
+    val articles = listOf(
+        Article("Guía completa sobre los pasos a seguir...", "Entra y descubre la información necesaria...", "12 Sept, 2023", R.drawable.accidente),
+        Article("Los derechos del consumidor", "Conoce tus derechos como consumidor y aprende cómo...", "11 Sept, 2023", R.drawable.consumidor),
+        Article("Aspectos legales para iniciar...", "Aprende los aspectos legales fundamentales al iniciar un negocio...", "11 Sept, 2023", R.drawable.negocio),
+        Article("Qué hacer en caso de un despido...", "Explora tus opciones legales y los pasos a seguir...", "10 Sept, 2023", R.drawable.despido),
+        Article("Cómo enfrentar problemas de ...","Obtén información sobre tus derechos como inquilino...","11 Sept, 2023",R.drawable.inquilinos),
+        Article("Guía completa sobre los pasos a seguir...", "Entra y descubre la información necesaria...", "12 Sept, 2023", R.drawable.accidente),
+        Article("Los derechos del consumidor", "Conoce tus derechos como consumidor y aprende cómo...", "11 Sept, 2023", R.drawable.consumidor),
+        Article("Aspectos legales para iniciar...", "Aprende los aspectos legales fundamentales al iniciar un negocio...", "11 Sept, 2023", R.drawable.negocio),
+        Article("Qué hacer en caso de un despido...", "Explora tus opciones legales y los pasos a seguir...", "10 Sept, 2023", R.drawable.despido),
+        Article("Cómo enfrentar problemas de ...","Obtén información sobre tus derechos como inquilino...","11 Sept, 2023",R.drawable.inquilinos)
+
+    )
+
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(articles) { article ->
+            ArticleItem(article)
+            Divider(color = Color.Gray, thickness = 1.dp)
         }
     }
 }
 
 @Composable
-fun ArticleItem(article: Article, onClick: () -> Unit) {
+fun ArticleItem(article: Article) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(8.dp)
     ) {
-        Image(painter = painterResource(id = article.imageRes), contentDescription = null, modifier = Modifier.size(56.dp))
+        Image(
+            painter = painterResource(id = article.imageRes),
+            contentDescription = null,
+            modifier = Modifier
+                .size(60.dp)
+                .clip(RoundedCornerShape(8.dp))
+        )
         Spacer(modifier = Modifier.width(8.dp))
-        Column {
-            Text(text = article.title, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(text = article.description, fontSize = 14.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
-            Text(text = article.date, fontSize = 12.sp, color = Color.Gray)
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = article.title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = article.description,
+                fontSize = 14.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = article.date,
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
         }
     }
 }
-
-data class Article(val imageRes: Int, val title: String, val description: String, val date: String)

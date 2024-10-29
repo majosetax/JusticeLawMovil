@@ -83,9 +83,9 @@ fun AppNavHost(
             Configuracion(navController)
         }
 
-        composable(route=NavigationItem.Informacion.route){
-            Informacion(navController)
-        }
+       composable(route=NavigationItem.Informacion.route){
+           Informacion(navController)
+       }
 
         composable(
             route = NavigationItem.Notification.route
