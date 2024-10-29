@@ -200,7 +200,7 @@ fun Informacion(navController: NavController){
                 ) {
                     TopBar()  // Barra superior de búsqueda y filtros
 
-                    // Lista de artículos
+                    // Lista de los artículos
                     val articles = listOf(
                         Article(R.drawable.accidente, "Guía completa sobre los pasos a seguir", "Entra y descubre la información necesaria...", "12 Sept, 2023"),
                         Article(R.drawable.consumidor, "Los derechos del consumidor", "Conoce tus derechos como consumidor y aprende cómo...", "11 Sept, 2023"),
