@@ -27,17 +27,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.justicelawmovil.R // Cambia 'justicelawmovil' por el nombre correcto de tu paquete
+import com.example.justicelawmovil.R
 import com.example.justicelawmovil.navigation.NavigationItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -58,7 +56,6 @@ fun ForumScreen(navController: NavController) {
     val notificationIcon: Painter = painterResource(id = R.drawable.notifications)
     val settingsIcon: Painter = painterResource(id = R.drawable.settings)
     val menuIcon: Painter = painterResource(id = R.drawable.menu)
-
 
     @Composable
     fun DrawerContent(navController: NavController) {
@@ -97,8 +94,6 @@ fun ForumScreen(navController: NavController) {
             DrawerMenuItem(icon = quienesSomos, label = "Quienes Somos") {
                 navController.navigate(NavigationItem.QuienesSomos.route)
             }
-
-
         }
     }
 
@@ -150,7 +145,6 @@ fun ForumScreen(navController: NavController) {
         }
     }
 
-
     @Composable
     fun TopBar(drawerState: DrawerState, menuIcon: Painter, scope: CoroutineScope) {
         androidx.compose.material.TopAppBar(
@@ -182,7 +176,6 @@ fun ForumScreen(navController: NavController) {
             elevation = 0.dp
         )
     }
-
 
     @Composable
     fun BottomBar(
@@ -246,7 +239,6 @@ fun ForumScreen(navController: NavController) {
         drawerContent = { DrawerContent(navController) }
     ) {
         androidx.compose.material3.Scaffold(
-
             topBar = { TopBar(drawerState = drawerState, menuIcon = menuIcon, scope = scope) },
             bottomBar = {
                 BottomBar(
@@ -256,11 +248,7 @@ fun ForumScreen(navController: NavController) {
                     forumIcon = forumIcon
                 )
             },
-
             content = { innerPadding ->
-
-
-
                 val questions = listOf(
                     ForumQuestion(
                         date = "30 de marzo, 2024",
@@ -284,40 +272,49 @@ fun ForumScreen(navController: NavController) {
 
                 val categories = listOf("General", "Consumidor", "Laboral", "Familiar", "Civil")
 
-                Column(modifier = Modifier.fillMaxSize().padding(16.dp)   .padding(innerPadding)) {
+                Column(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .padding(innerPadding)) {
 
-
-                    androidx.compose.material3.Button(
-                        onClick = {
-                            navController.navigate(
-                                NavigationItem.Calendario.route
-                            )
-                        },
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
-                        shape = RoundedCornerShape(50),
-                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(Color(0xFF001C36))
+                            .padding(bottom = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        androidx.compose.material3.Text("Calendario", color = Color.White)
+                        // Botón de Calendario
+                        androidx.compose.material3.Button(
+                            onClick = {
+                                navController.navigate(NavigationItem.Calendario.route)
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(40.dp),
+                            shape = RoundedCornerShape(50),
+                            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
+                        ) {
+                            androidx.compose.material3.Text("Calendario", color = Color.White)
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp)) // Espacio entre botones
+
+                        // Botón de Ver perfil abogado
+                        androidx.compose.material3.Button(
+                            onClick = {
+                                navController.navigate(NavigationItem.VerPerfilAbogado.route)
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(40.dp),
+                            shape = RoundedCornerShape(50),
+                            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
+                        ) {
+                            androidx.compose.material3.Text("Ver perfil abogado", color = Color.White)
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    androidx.compose.material3.Button(
-                        onClick = {
-                            navController.navigate(
-                                NavigationItem.VerPerfilAbogado.route
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        shape = RoundedCornerShape(50),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
-                    ) {
-                        androidx.compose.material3.Text("Ver perfil abogado", color = Color.White)
-                    }
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -340,19 +337,15 @@ fun ForumScreen(navController: NavController) {
                         )
                     }
 
-
                     Spacer(modifier = Modifier.height(16.dp))
-
 
                     SearchBar()
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-
                     CategoryRow(categories)
 
                     Spacer(modifier = Modifier.height(16.dp))
-
 
                     LazyColumn {
                         items(questions) { question ->
@@ -362,7 +355,6 @@ fun ForumScreen(navController: NavController) {
                     }
                 }
             }
-
         )
     }
 }
@@ -375,9 +367,7 @@ fun SearchBar() {
             .fillMaxWidth()
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .border(1.dp, Color.Black, shape = RoundedCornerShape(8.dp)) // Borde negro y redondeado
-
             .padding(8.dp)
-
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             // Ícono de lupa
@@ -458,9 +448,6 @@ fun ForumQuestionCard(question: ForumQuestion) {
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 )
                 Text(text = "Respuestas: ${question.answers}")
-
-
-
             }
         }
     }

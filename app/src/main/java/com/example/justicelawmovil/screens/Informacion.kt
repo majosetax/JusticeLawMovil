@@ -16,24 +16,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material.TextField
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +56,7 @@ import com.example.justicelawmovil.navigation.NavigationItem
 import kotlinx.coroutines.launch
 
 @Composable
-fun Informacion(navController: NavController){
+fun Informacion(navController: NavController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -107,6 +105,7 @@ fun Informacion(navController: NavController){
             }
         }
     }
+
     @Composable
     fun DrawerHeader() {
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -144,7 +143,7 @@ fun Informacion(navController: NavController){
     }
 
     ModalNavigationDrawer(
-        drawerState=drawerState,
+        drawerState = drawerState,
         drawerContent = { DrawerContent(navController) }
     ) {
         Scaffold(
@@ -190,15 +189,13 @@ fun Informacion(navController: NavController){
                 }
             },
             content = { innerPadding ->
-                val scrollState = rememberScrollState()
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(20.dp)
-                        .verticalScroll(rememberScrollState())
+                LazyColumn(
+                    contentPadding = innerPadding,
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    TopBar()  // Barra superior de búsqueda y filtros
+                    item {
+                        TopBar()  // Barra superior de búsqueda y filtros
+                    }
 
                     // Lista de los artículos
                     val articles = listOf(
@@ -208,13 +205,11 @@ fun Informacion(navController: NavController){
                         Article(R.drawable.despido, "Qué hacer en caso de un despido", "Explora tus opciones legales y los pasos a seguir...", "9 Sept, 2023")
                     )
 
-                    LazyColumn(contentPadding = innerPadding) {
-                        items(articles) { article ->
-                            ArticleItem(article = article) {
-                                // Acción al hacer clic en un artículo, puedes personalizar esto si necesitas navegación adicional
-                            }
-                            Divider(color = Color.LightGray, thickness = 0.5.dp)
+                    items(articles) { article ->
+                        ArticleItem(article = article) {
+                            // Acción al hacer clic en un artículo, puedes personalizar esto si necesitas navegación adicional
                         }
+                        Divider(color = Color.LightGray, thickness = 0.5.dp)
                     }
                 }
             }
@@ -248,7 +243,7 @@ fun TopBar() {
             listOf("Todos", "Comercial", "Laboral", "Familiar", "Penal", "Civil", "Inmobiliario").forEach { category ->
                 Text(
                     text = category,
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.clickable { /* Acción al hacer clic en la categoría */ }
                 )
             }
