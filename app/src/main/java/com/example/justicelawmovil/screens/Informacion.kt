@@ -199,15 +199,24 @@ fun Informacion(navController: NavController) {
 
                     // Lista de los artículos
                     val articles = listOf(
-                        Article(R.drawable.accidente, "Guía completa sobre los pasos a seguir", "Entra y descubre la información necesaria...", "12 Sept, 2023"),
-                        Article(R.drawable.consumidor, "Los derechos del consumidor", "Conoce tus derechos como consumidor y aprende cómo...", "11 Sept, 2023"),
+                        Article(
+                            R.drawable.divorcio,
+                            "Guía completa sobre los pasos a seguir",
+                            "Entra y descubre la información necesaria...",
+                            "12 Sept, 2023",
+                            NavigationItem.Divorcio.route
+                        ),
+                        Article(R.drawable.consumidor, "Los derechos del consumidor", "Conoce tus derechos como consumidor y aprende cómo...", "11 Sept, 2023",NavigationItem.Divorcio.route),
                         Article(R.drawable.negocio, "Aspectos legales para iniciar", "Aprende los aspectos legales fundamentales al iniciar un negocio...", "10 Sept, 2023"),
-                        Article(R.drawable.despido, "Qué hacer en caso de un despido", "Explora tus opciones legales y los pasos a seguir...", "9 Sept, 2023")
+                        Article(R.drawable.despido, "Qué hacer en caso de un despido", "Explora tus opciones legales y los pasos a seguir...", "9 Sept, 2023"),
+                        Article(R.drawable.inquilinos,"Cómo enfrentar problemas de arrendamiento y derechos del inquilino","Obtén información sobre tus derechos como inquilino","12 sep,2023"),
+                        Article(R.drawable.testamento,"Como redactar un testamento"," Aprende los pasos necesarios para realizar un testamento.","12 Nov,2023"),
+                        Article(R.drawable.autor,"Derechos de Autor"," Conoce que son los derechos de autor y cuando los puedes usar","18 Nov,2023")
                     )
 
                     items(articles) { article ->
                         ArticleItem(article = article) {
-                            // Acción al hacer clic en un artículo, puedes personalizar esto si necesitas navegación adicional
+                            article.route?.let { navController.navigate(it) }
                         }
                         Divider(color = Color.LightGray, thickness = 0.5.dp)
                     }
@@ -240,7 +249,7 @@ fun TopBar() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            listOf("Todos", "Comercial", "Laboral", "Familiar", "Penal", "Civil", "Inmobiliario").forEach { category ->
+            listOf("Todos", "Comercial", "Laboral", "Familiar", "Penal", "Civil").forEach { category ->
                 Text(
                     text = category,
                     style = MaterialTheme.typography.labelLarge,
@@ -270,4 +279,9 @@ fun ArticleItem(article: Article, onClick: () -> Unit) {
     }
 }
 
-data class Article(val imageRes: Int, val title: String, val description: String, val date: String)
+data class Article(
+    val imageRes: Int,
+    val title: String,
+    val description: String,
+    val date: String,
+    val route: String? = null)

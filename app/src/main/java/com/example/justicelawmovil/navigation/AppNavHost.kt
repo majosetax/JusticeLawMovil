@@ -10,6 +10,7 @@ import com.example.justicelawmovil.model.NotificationModel
 import com.example.justicelawmovil.screens.AboutUsScreen
 import com.example.justicelawmovil.screens.CalendarioScreen
 import com.example.justicelawmovil.screens.Configuracion
+import com.example.justicelawmovil.screens.DivorcioScreen
 import com.example.justicelawmovil.screens.ForumScreen
 import com.example.justicelawmovil.screens.Historial
 import com.example.justicelawmovil.screens.HomeScreen
@@ -29,6 +30,7 @@ import com.example.justicelawmovil.screens.ReestablecimientoExitoso
 import com.example.justicelawmovil.screens.RegisterScreen
 import com.example.justicelawmovil.screens.UserListScreen
 import com.example.justicelawmovil.screens.VerPerfilAbogado
+import okhttp3.Route
 
 @Composable
 fun AppNavHost(
@@ -161,6 +163,13 @@ fun AppNavHost(
             route = NavigationItem.Calendario.route
         ) {
             CalendarioScreen(navController)
+        }
+
+        composable(
+            route = NavigationItem.Divorcio.route
+        ) {
+            DivorcioScreen(navController)
+
         }
         
     }

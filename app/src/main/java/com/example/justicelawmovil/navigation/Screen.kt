@@ -24,6 +24,7 @@ enum class Screen { // Names to identify the screens
     FORO,
     QUIENES_SOMOS,
     CALENDARIO,
+    DIVORCIO,
 }
 
 // Objects to identify where navigate
@@ -51,5 +52,6 @@ sealed class NavigationItem(val route: String) {
     object Foro:NavigationItem(Screen.FORO.name)
     object QuienesSomos:NavigationItem(Screen.QUIENES_SOMOS.name)
     object Calendario:NavigationItem(Screen.CALENDARIO.name)
+    object Divorcio:NavigationItem(Screen.DIVORCIO.name)
 
 }
