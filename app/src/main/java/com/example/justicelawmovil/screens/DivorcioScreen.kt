@@ -146,7 +146,7 @@ fun DivorcioScreen(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "Información") },
+                    title = { Text(text = "") },
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch { drawerState.open() }
