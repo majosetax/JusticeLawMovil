@@ -233,7 +233,7 @@ fun ArticleDetailScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.divorcio), // Reemplaza con el recurso adecuado
+                painter = painterResource(id = R.drawable.divorcio),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -304,30 +304,30 @@ fun RecommendedSection() {
             Button(
                 onClick = { /* Acción para "Último" */ },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF4C553)),
-                shape = RoundedCornerShape(50), // Bordes redondeados
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
-                    .width(100.dp) // Ancho personalizado para que se asemeje a la imagen
-                    .height(40.dp) // Altura personalizada
+                    .width(100.dp)
+                    .height(40.dp)
             ) {
                 Text(text = "Último", color = Color.White,fontWeight = FontWeight.Bold, fontSize = 10.sp)
             }
             Button(
                 onClick = { /* Acción para "Más Recomendado" */ },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF003049)),
-                shape = RoundedCornerShape(50), // Bordes redondeados
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
-                    .width(160.dp) // Ancho personalizado para este botón
+                    .width(160.dp)
                     .height(40.dp)
-                    .padding(horizontal = 8.dp) // Espaciado entre botones
+                    .padding(horizontal = 8.dp)
             ) {
                 Text(text = "Más Recomendado", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 10.sp)
             }
             Button(
                 onClick = { /* Acción para "Más Visto" */ },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF003049)),
-                shape = RoundedCornerShape(50), // Bordes redondeados
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
-                    .width(110.dp) // Ancho personalizado
+                    .width(110.dp)
                     .height(40.dp)
             ){
                 Text(text = "Más Visto", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 10.sp)
@@ -341,22 +341,22 @@ fun RecommendedSection() {
             RecommendationItem(
                 title = "Cómo enfrentar problemas de inquilino",
                 description = "Consejos legales para resolver problemas con inquilinos.",
-                imageRes = R.drawable.inquilinos // Imagen asociada a esta recomendación
+                imageRes = R.drawable.inquilinos
             ),
             RecommendationItem(
                 title = "Cómo redactar un testamento",
                 description = "Guía paso a paso para redactar un testamento válido.",
-                imageRes = R.drawable.testamento // Imagen asociada a esta recomendación
+                imageRes = R.drawable.testamento
             ),
             RecommendationItem(
                 title = "Derechos del trabajador",
                 description = "Conoce tus derechos laborales y cómo defenderlos.",
-                imageRes = R.drawable.trabajador // Imagen asociada a esta recomendación
+                imageRes = R.drawable.trabajador
             ),
             RecommendationItem(
                 title = "Pensión Alimenticia",
                 description = "Información sobre cómo solicitar pensión alimenticia.",
-                imageRes = R.drawable.pension // Imagen asociada a esta recomendación
+                imageRes = R.drawable.pension
             )
         )
 
@@ -366,7 +366,7 @@ fun RecommendedSection() {
     }
 }
 
-// Data class para almacenar los datos de cada recomendación
+
 data class RecommendationItem(
     val title: String,
     val description: String,
