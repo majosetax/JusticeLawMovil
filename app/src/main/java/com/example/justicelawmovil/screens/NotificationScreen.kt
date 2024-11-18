@@ -166,25 +166,57 @@ fun TopBar(drawerState: DrawerState, scope: CoroutineScope) {
 }
 
 @Composable
-fun BottomBar(navController: NavController, homeIcon: Painter, searchIcon: Painter, forumIcon: Painter) {
-    BottomAppBar(
+fun BottomBar(
+    navController: NavController,
+    homeIcon: Painter,
+    searchIcon: Painter,
+    forumIcon: Painter
+) {
+    androidx.compose.material3.BottomAppBar(
+        modifier = Modifier
+            .padding(16.dp)
+            .height(60.dp)
+            .clip(RoundedCornerShape(25.dp)),
         containerColor = Color(0xFF003049),
         contentColor = Color.White,
-        modifier = Modifier.clip(RoundedCornerShape(25.dp))
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxSize()
         ) {
-            IconButton(onClick = { navController.navigate(NavigationItem.Home.route) }) {
-                Icon(painter = homeIcon, contentDescription = "Home")
+            androidx.compose.material3.IconButton(onClick = {
+                navController.navigate(
+                    NavigationItem.Home.route
+                )
+            }) {
+                androidx.compose.material3.Icon(
+                    painter = homeIcon,
+                    contentDescription = "Home",
+                    tint = Color.White
+                )
             }
-            IconButton(onClick = { /* Acción del botón de búsqueda */ }) {
-                Icon(painter = searchIcon, contentDescription = "Search")
+            androidx.compose.material3.IconButton(onClick = {
+                navController.navigate(
+                    NavigationItem.Informacion.route
+                )
+            }) {
+                androidx.compose.material3.Icon(
+                    painter = searchIcon,
+                    contentDescription = "Search",
+                    tint = Color.White
+                )
             }
-            IconButton(onClick = { /* Acción del botón del foro */ }) {
-                Icon(painter = forumIcon, contentDescription = "Foro")
+            androidx.compose.material3.IconButton(onClick = {
+                navController.navigate(
+                    NavigationItem.Foro.route
+                )
+            }) {
+                androidx.compose.material3.Icon(
+                    painter = forumIcon,
+                    contentDescription = "Foro",
+                    tint = Color.White
+                )
             }
         }
     }

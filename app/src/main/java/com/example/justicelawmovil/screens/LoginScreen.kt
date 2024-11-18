@@ -3,6 +3,7 @@ package com.example.justicelawmovil.screens
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -140,6 +141,7 @@ fun LoginScreen(navController: NavController) {
 
 
         Text(
+
             text = "¿Olvidaste tu contraseña?",
             style = MaterialTheme.typography.bodyLarge.copy(
                 color = Color(0xFFCF9E3E),
@@ -150,6 +152,8 @@ fun LoginScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(bottom = 32.dp)
                 .align(Alignment.End)
+                .clickable { navController.navigate(NavigationItem.OlvidoContrasena.route) }
+
         )
         Button(
             onClick = {
@@ -166,36 +170,23 @@ fun LoginScreen(navController: NavController) {
             Text("Iniciar Sesión", color = Color.White)
         }
 
-//        Button(
-//            onClick = {
-//                navController.navigate(
-//                    NavigationItem.Profile.route
-//                )
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(50.dp),
-//            shape = RoundedCornerShape(50),
-//            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
-//        ) {
-//            Text("Perfil", color = Color.White)
-//        }
+        Button(
+            onClick = {
+                navController.navigate(
+                    NavigationItem.UserList.route
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
+        ) {
+            Text("Usuarios", color = Color.White)
+        }
 
 
-//        Button(
-//            onClick = {
-//                navController.navigate(
-//                    NavigationItem.VerPerfilAbogado.route
-//                )
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(50.dp),
-//            shape = RoundedCornerShape(50),
-//            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
-//        ) {
-//            Text("Ver perfil", color = Color.White)
-//        }
+
 
     }
 }
