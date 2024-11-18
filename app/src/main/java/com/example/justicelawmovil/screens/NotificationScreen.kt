@@ -298,7 +298,7 @@ fun NotificationItem(title: String, description: String) {
                 color = Color.Gray
             )
 
-            // Contenido desplegable
+            // Contenido desplegable hola
             if (isExpanded) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
