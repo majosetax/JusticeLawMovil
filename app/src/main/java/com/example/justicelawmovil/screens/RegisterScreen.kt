@@ -97,7 +97,7 @@ fun RegisterScreen(navController: NavController){
 
             Button(
                 onClick = { },
-                colors = ButtonDefaults.buttonColors(Color(0xFF001C36)),
+                colors = ButtonDefaults.buttonColors(Color(0xFF001C37)),
                 shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .weight(1f)
