@@ -96,12 +96,10 @@ fun HomeScreen(navController: NavController) {
             }
 
             DrawerMenuItem(icon = quienesSomos, label = "Quienes Somos") {
-                navController.navigate(NavigationItem.Configuracion.route)
+                navController.navigate(NavigationItem.QuienesSomos.route)
             }
 
-            DrawerMenuItem(icon = helpIcon, label = "Ayuda") {
-                navController.navigate(NavigationItem.Profile.route)
-            }
+
         }
     }
 
@@ -198,7 +196,7 @@ fun HomeScreen(navController: NavController) {
                 IconButton(onClick = { navController.navigate(NavigationItem.Informacion.route) }) {
                     Icon(painter = searchIcon, contentDescription = "Search", tint = Color.White)
                 }
-                IconButton(onClick = { /* Acción del botón de foro */ }) {
+                IconButton(onClick = { navController.navigate(NavigationItem.Foro.route) }) {
                     Icon(painter = forumIcon, contentDescription = "Foro", tint = Color.White)
                 }
             }
