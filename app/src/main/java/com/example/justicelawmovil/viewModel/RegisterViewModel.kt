@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.justicelawmovil.data.ApiClient
 import com.example.justicelawmovil.model.TypeDocumentModel
+import com.example.justicelawmovil.model.UserModel
 import com.example.justicelawmovil.service.RegisterRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +26,10 @@ class RegisterViewModel : ViewModel() {
     val registerState: StateFlow<RegisterState> = _registerState.asStateFlow()
 
     private val _typeDocuments = MutableStateFlow<List<TypeDocumentModel>>(emptyList())
-    val typeDocuments: StateFlow<List<TypeDocumentModel>> = _typeDocuments.asStateFlow()
+    val typeDocuments: StateFlow<List<TypeDocumentModel>> = _typeDocuments
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
 
     init {
         getTypeDocuments()
@@ -34,12 +38,12 @@ class RegisterViewModel : ViewModel() {
     private fun getTypeDocuments() {
         viewModelScope.launch {
             try {
-                val documents = ApiClient.userApiService.getTypeDocuments()
-                _typeDocuments.value = documents
-                Log.d("TypeDocuments", "Datos obtenidos: $documents")
+                val response = ApiClient.userApiService.getTypeDocuments()
+                _typeDocuments.value = response
+                Log.d("TypeDocuments", "Datos obtenidos tipo documentos: $response")
             } catch (e: Exception) {
                 Log.e("TypeDocuments", "Error al obtener los datos", e)
-                _typeDocuments.value = emptyList()
+                _error.value = "Error fetching tipo documentos: ${e.message}"
             }
         }
     }

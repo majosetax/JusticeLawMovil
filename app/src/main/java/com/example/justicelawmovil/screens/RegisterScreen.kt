@@ -1,6 +1,8 @@
 package com.example.justicelawmovil.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +18,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -48,10 +53,26 @@ import com.example.justicelawmovil.service.RegisterRequest
 import com.example.justicelawmovil.viewModel.RegisterState
 import com.example.justicelawmovil.viewModel.RegisterViewModel
 
+import androidx.compose.material3.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.text.input.VisualTransformation
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-    val state = viewModel.registerState.collectAsState()
+    val state by viewModel.registerState.collectAsState()
     val typeDocuments by viewModel.typeDocuments.collectAsState()
+
+    var name by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var selectedTypeDocument by remember { mutableStateOf<TypeDocumentModel?>(null) }
+    var documentNumber by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+
+    var showSuccessMessage by remember { mutableStateOf(false) }
+    var isPasswordVisible by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -60,101 +81,196 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 50.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var name by remember { mutableStateOf("") }
-            var lastName by remember { mutableStateOf("") }
-            var selectedTypeDocument by remember { mutableStateOf<TypeDocumentModel?>(null) }
-            var documentNumber by remember { mutableStateOf("") }
-            var email by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(color = Color(0xFF001C36), fontWeight = FontWeight.Bold)) {
+                        append("Justice")
+                    }
+                    withStyle(style = SpanStyle(color = Color(0xFFCF9E3E), fontWeight = FontWeight.Bold)) {
+                        append("Law")
+                    }
+                },
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 28.sp,
+                )
+            )
 
-            // Campos de texto
+            Text(
+                text = "Leyes claras, justicia real",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 16.sp,
+                    color = Color(0xFF001C36)
+                ),
+                modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+            ) {
+                OutlinedButton(
+                    onClick = {
+                        navController.navigate(NavigationItem.Login.route)
+                    },
+                    shape = RoundedCornerShape(50),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color(0xFF001C36)
+                    ),
+                    border = BorderStroke(1.dp, Color(0xFF001C36))
+                ) {
+                    Text(text = "Iniciar Sesion")
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Button(
+                    onClick = { },
+                    colors = ButtonDefaults.buttonColors(Color(0xFF001C36)),
+                    shape = RoundedCornerShape(50),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp)
+                ) {
+                    Text(text = "Registrarse", color = Color.White)
+                }
+            }
+
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Nombre") })
+                label = { Text("Nombre") }
+            )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = lastName,
                 onValueChange = { lastName = it },
-                label = { Text("Apellidos") })
+                label = { Text("Apellidos") }
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Dropdown para Tipo de Documento
-            var expanded by remember { mutableStateOf(false) }
-            Box {
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = {
+                    expanded = !expanded
+                }
+            ) {
                 OutlinedTextField(
-                    value = selectedTypeDocument?.description ?: "Seleccionar tipo de documento",
+                    value = selectedTypeDocument?.let { "${it.code} - ${it.description}" }
+                        ?: "Tipo de documento",
                     onValueChange = { },
                     label = { Text("Tipo de documento") },
                     readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { expanded = true } // Asegúrate de que esto abre el menú
+                        .menuAnchor()
+                        .clickable {
+                            expanded = !expanded
+                            Log.d("Dropdown", "Dropdown clicked. Expanded: $expanded")
+                        }
                 )
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                        Log.d("Dropdown", "Dropdown dismissed")
+                    }
+                ) {
                     typeDocuments.forEach { document ->
                         DropdownMenuItem(onClick = {
                             selectedTypeDocument = document
                             expanded = false
-                        }) {
-                            Text(text = document.description)
+                            Log.d("Dropdown", "Document selected: ${document.code} - ${document.description}")
+                        },
+                            modifier = Modifier.background(Color.White)
+                        ) {
+                            Text(text = "${document.code} - ${document.description}")
                         }
                     }
                 }
             }
+
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = documentNumber,
                 onValueChange = { documentNumber = it },
-                label = { Text("Número de documento") })
+                label = { Text("Número de documento") }
+            )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") })
+                label = { Text("Email") }
+            )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Contraseña") },
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                singleLine = true,
+                trailingIcon = {
+                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                        Icon(
+                            imageVector = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            contentDescription = if (isPasswordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                        )
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón de registro
-            Button(onClick = {
-                if (selectedTypeDocument != null) {
-                    viewModel.registerUser(
-                        RegisterRequest(
-                            name = name,
-                            last_name = lastName,
-                            type_document_id = selectedTypeDocument!!.id.toString(),
-                            document_number = documentNumber,
-                            email = email,
-                            password = password
+            Button(
+                onClick = {
+                    if (selectedTypeDocument != null) {
+                        Log.d("Register", "Registering user with document type ID: ${selectedTypeDocument!!.id}")
+                        viewModel.registerUser(
+                            RegisterRequest(
+                                name = name,
+                                last_name = lastName,
+                                type_document_id = selectedTypeDocument!!.id.toString(),
+                                document_number = documentNumber,
+                                email = email,
+                                password = password
+                            )
                         )
-                    )
-                }
-            }, modifier = Modifier.fillMaxWidth()) {
-                Text("Registrarse")
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
+            ) {
+                Text("Registrarse", color = Color.White)
             }
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Estado del registro
-            when (val registerState = state.value) {
+            when (val registerState = state) {
                 is RegisterState.Loading -> Text("Cargando...")
                 is RegisterState.Success -> {
-                    Text(registerState.message, color = Color.Green)
-                    navController.navigate(NavigationItem.Home.route)
+                    showSuccessMessage = true
+                    LaunchedEffect(Unit) {
+                        kotlinx.coroutines.delay(2000) // Esperar 2 segundos
+                        showSuccessMessage = false
+                        navController.navigate(NavigationItem.Login.route) // Navegar al login después de mostrar el mensaje
+                    }
                 }
-
                 is RegisterState.Error -> Text(registerState.error, color = Color.Red)
                 else -> {}
+            }
+
+            if (showSuccessMessage) {
+                Text("Registro exitoso", color = Color.Green)
             }
         }
     }

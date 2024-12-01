@@ -1,5 +1,7 @@
 package com.example.justicelawmovil.screens
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -14,13 +16,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,15 +44,26 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.justicelawmovil.navigation.NavigationItem
-
+import com.example.justicelawmovil.viewModel.LoginState
+import com.example.justicelawmovil.viewModel.LoginViewModel
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var isPasswordVisible by remember { mutableStateOf(false) }
+
+    val loginState by viewModel.loginState.observeAsState()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -54,7 +72,6 @@ fun LoginScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text(
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(color = Color(0xFF001C36), fontWeight = FontWeight.Bold)) {
@@ -64,9 +81,7 @@ fun LoginScreen(navController: NavController) {
                     append("Law")
                 }
             },
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontSize = 28.sp,
-            )
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 28.sp)
         )
 
         Text(
@@ -78,13 +93,13 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
         )
 
-
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 32.dp)
         ) {
+
             Button(
                 onClick = { },
                 colors = ButtonDefaults.buttonColors(Color(0xFF001C36)),
@@ -93,15 +108,15 @@ fun LoginScreen(navController: NavController) {
                     .weight(1f)
                     .height(40.dp)
             ) {
-                Text(text = "Iniciar sesión", color = Color.White)
+                Text(text = "Iniciar Sesión", color = Color.White)
             }
+
+
             Spacer(modifier = Modifier.width(8.dp))
+
             OutlinedButton(
                 onClick = {
-                    navController.navigate( // Navigate to a route in the current NavGraph
-                        NavigationItem.Register.route
-                    )
-                    // Route defined in AppNavHost
+                    navController.navigate(NavigationItem.Register.route)
                 },
                 shape = RoundedCornerShape(50),
                 modifier = Modifier
@@ -114,52 +129,80 @@ fun LoginScreen(navController: NavController) {
             ) {
                 Text(text = "Registrarse")
             }
-        }
 
+
+
+        }
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(), // Asegúrate de que ocupe todo el ancho
+            trailingIcon = {
+                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                    Icon(
+                        imageVector = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = if (isPasswordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                    )
+                }
+            }
         )
+
         Spacer(modifier = Modifier.height(8.dp))
 
+        loginState?.let {
+            when (it) {
+                is LoginState.Error -> {
+                    Text(
+                        text = it.message,
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp)
+                    )
+                }
+                is LoginState.Success -> {
+                    val successState = it
+                    val token = successState.token
+                    val role = successState.role
+                    val expiresIn = successState.expiresIn
+                    val user = successState.user
 
-        Text(
+                    // Guarda el token en SharedPreferences
+                    val sharedPreferences: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                    sharedPreferences.edit().apply {
+                        putString("token", token)
+                        putString("role", role)
+                        putInt("expires_in", expiresIn)
+                        putString("user_name", user?.name)
+                        apply()
+                    }
 
-            text = "¿Olvidaste tu contraseña?",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                color = Color(0xFFCF9E3E),
-                fontSize = 14.sp,
-                textAlign = TextAlign.End
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 32.dp)
-                .align(Alignment.End)
-                .clickable { navController.navigate(NavigationItem.OlvidoContrasena.route) }
+                    // Navega al Home después de guardar el token
+                    LaunchedEffect(token) {
+                        println("Token: $token")
+                        println("Role: $role")
+                        println("User: ${user?.name}")
+                        navController.navigate(NavigationItem.Home.route)
+                    }
+                }
+                else -> Unit
+            }
+        }
 
-        )
         Button(
             onClick = {
-                navController.navigate(
-                    NavigationItem.Home.route
-                )
+                viewModel.loginUser(email, password)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -169,27 +212,10 @@ fun LoginScreen(navController: NavController) {
         ) {
             Text("Iniciar Sesión", color = Color.White)
         }
-
-        Button(
-            onClick = {
-                navController.navigate(
-                    NavigationItem.UserList.route
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(Color(0xFF001C36))
-        ) {
-            Text("Usuarios", color = Color.White)
-        }
-
-
-
-
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable

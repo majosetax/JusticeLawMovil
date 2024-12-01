@@ -1,5 +1,7 @@
 package com.example.justicelawmovil.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
@@ -43,9 +46,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposableTarget
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,24 +61,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.justicelawmovil.R
 import com.example.justicelawmovil.navigation.NavigationItem
 import com.example.justicelawmovil.screens.HomeScreen
+import com.example.justicelawmovil.viewModel.LogoutState
+import com.example.justicelawmovil.viewModel.LogoutViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun Configuracion(navController: NavController) {
+fun Configuracion(navController: NavController, logoutViewModel: LogoutViewModel = viewModel()) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
 
     val helpIcon: Painter = painterResource(id = R.drawable.help)
     val homeIcon: Painter = painterResource(id = R.drawable.home)
@@ -83,6 +96,10 @@ fun Configuracion(navController: NavController) {
     val settingsIcon: Painter = painterResource(id = R.drawable.settings)
     val menuIcon: Painter = painterResource(id = R.drawable.menu)
 
+    val logoutState by logoutViewModel.logoutState.observeAsState()
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     @Composable
     fun DrawerContent(navController: NavController) {
@@ -264,6 +281,7 @@ fun Configuracion(navController: NavController) {
         }
     }
 
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = { DrawerContent(navController) }
@@ -341,128 +359,8 @@ fun Configuracion(navController: NavController) {
                             .padding(16.dp),
                         verticalArrangement = Arrangement.Top
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.lenguaje),
-                                contentDescription = "Lenguaje",
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(
-                                text = "Lenguaje",
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(start = 18.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ubicacion),
-                                contentDescription = "Ubicación",
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(
-                                text = "Ubicación",
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(start = 18.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
 
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.notification),
-                                contentDescription = "Notificaciones",
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(
-                                text = "Notificaciones",
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(start = 18.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.privacidad),
-                                contentDescription = "Privacidad",
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(
-                                text = "Privacidad",
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(start = 18.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-
-                        @Composable
-                        fun AnonimoRow() {
-                            val isOn = remember { mutableStateOf(false) }
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.anonimo),
-                                    contentDescription = "Estado Anónimo",
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Text(
-                                    text = "Estado Anónimo",
-                                    fontSize = 18.sp,
-                                    modifier = Modifier.padding(start = 18.dp)
-                                )
-
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                Switch(
-                                    checked = isOn.value,
-                                    onCheckedChange = { isOn.value = it },
-                                    modifier = Modifier.padding(end = 8.dp),
-                                    colors = androidx.compose.material.SwitchDefaults.colors(
-                                        checkedThumbColor = Color(0xFF003049),
-                                        uncheckedThumbColor = Color.Gray
-                                    )
-                                )
-                            }
-                        }
-
-
-                        AnonimoRow()
-
-                        Spacer(modifier = Modifier.height(8.dp))
 
 
                         Row(
@@ -490,7 +388,8 @@ fun Configuracion(navController: NavController) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 8.dp),
+                                .padding(top = 8.dp)
+                            .clickable { showLogoutDialog = true },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
@@ -509,9 +408,70 @@ fun Configuracion(navController: NavController) {
 
                     }
 
+                if (showLogoutDialog) {
+                    LogoutConfirmationDialog(
+                        onConfirm = {
+                            showLogoutDialog = false
+                            logoutViewModel.logoutUser(context) // Llama al ViewModel
+                        },
+                        onDismiss = { showLogoutDialog = false }
+                    )
+                }
+
+                // Observa el estado del logout
+                val logoutState by logoutViewModel.logoutState.observeAsState()
+
+                logoutState?.let {
+                    when (it) {
+                        is LogoutState.Success -> {
+                            Log.d("LogoutState", "Cierre de sesión exitoso")
+
+                            LaunchedEffect(Unit) {
+                                navController.navigate(NavigationItem.Login.route){
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
+                        }
+                        is LogoutState.Error -> {
+                            Log.e("LogoutState", "Error al cerrar sesión: ${it.message}")
+                            Toast.makeText(
+                                LocalContext.current,
+                                (it as LogoutState.Error).message,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        else -> {}
+                    }
+                }
+
+
+
             }
         )
     }
+}
+
+
+
+@Composable
+fun LogoutConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = onConfirm) {
+                androidx.compose.material3.Text("Cerrar sesión", color = Color.Red)
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                androidx.compose.material3.Text("Cancelar")
+            }
+        },
+        title = { androidx.compose.material3.Text("Cerrar sesión") },
+        text = { androidx.compose.material3.Text("¿Estás seguro de que deseas cerrar sesión?") }
+    )
 }
 
 
