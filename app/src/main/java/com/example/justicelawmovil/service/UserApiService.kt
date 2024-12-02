@@ -1,12 +1,17 @@
 package com.example.justicelawmovil.service
 
+import com.example.justicelawmovil.model.CityModel
+import com.example.justicelawmovil.model.CountryModel
+import com.example.justicelawmovil.model.StateModel
 import com.example.justicelawmovil.model.TypeDocumentModel
 import com.example.justicelawmovil.model.UserModel
+import com.example.justicelawmovil.model.UserProfileModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
 data class RegisterRequest(
@@ -57,5 +62,24 @@ interface UserApiService {
 
     @POST("logoutPrueba")
     suspend fun logout(@Header("Authorization") token: String): Response<LogoutResponse>
+
+    @POST("auth/me")
+    suspend fun getMe(@Header("Authorization") token: String): Response<UserModel>
+
+    @GET("countries")
+    suspend fun getCountries(): List<CountryModel>
+
+    @GET("states/{countryId}")
+    suspend fun getStatesByCountry(@Path("countryId") countryId: Int): List<StateModel>
+
+    @GET("cities/{stateId}")
+    suspend fun getCitiesByState(@Path("stateId") stateId: Int): List<CityModel>
+
+    @GET("getprofile")
+    suspend fun getProfile(@Header("Authorization") token: String): Response<UserProfileModel>
+
+    @POST("profile") suspend fun updateUserProfile (@Header("Authorization") token: String,
+        @Body userProfileModel: UserProfileModel
+    ): Response<UserProfileModel>
 
 }

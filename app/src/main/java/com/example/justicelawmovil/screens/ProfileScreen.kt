@@ -1,5 +1,10 @@
 package com.example.justicelawmovil.screens
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,16 +27,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
@@ -39,33 +50,77 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.example.justicelawmovil.R
+import com.example.justicelawmovil.model.UserProfileModel
 import com.example.justicelawmovil.navigation.NavigationItem
 import com.example.justicelawmovil.screens.HomeScreen
+import com.example.justicelawmovil.viewModel.CityViewModel
+import com.example.justicelawmovil.viewModel.CountryViewModel
+import com.example.justicelawmovil.viewModel.MeState
+import com.example.justicelawmovil.viewModel.MeViewModel
+import com.example.justicelawmovil.viewModel.StateViewModel
+import com.example.justicelawmovil.viewModel.UserProfileState
+import com.example.justicelawmovil.viewModel.UserProfileViewModel
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController,
+                  viewModel: MeViewModel = viewModel(),
+                  countryViewModel: CountryViewModel = viewModel(),
+                  stateViewModel: StateViewModel = viewModel(),
+                  cityViewModel: CityViewModel = viewModel(),
+                  userProfileViewModel: UserProfileViewModel = viewModel()) {
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+
+
+    val meState by viewModel.meState.observeAsState()
+
+    val countries by countryViewModel.countries.observeAsState(emptyList())
+
+    var selectedCountry by remember { mutableStateOf("Seleccionar país") }
+
+    val states by stateViewModel.states.collectAsState()
+    var selectedState by remember { mutableStateOf("Seleccionar estado") }
+
+    val cities by cityViewModel.cities.collectAsState()
+    var selectedCity by remember { mutableStateOf("Seleccionar ciudad") }
 
     val helpIcon: Painter = painterResource(id = R.drawable.help)
     val homeIcon: Painter = painterResource(id = R.drawable.home)
@@ -77,6 +132,67 @@ fun ProfileScreen(navController: NavController) {
     val notificationIcon: Painter = painterResource(id = R.drawable.notifications)
     val settingsIcon: Painter = painterResource(id = R.drawable.settings)
     val menuIcon: Painter = painterResource(id = R.drawable.menu)
+
+    val context = LocalContext.current
+
+    var expanded by remember { mutableStateOf(false) }
+
+    var stateDropdownExpanded by remember { mutableStateOf(false) }
+
+    var cityDropdownExpanded by remember { mutableStateOf(false) }
+
+    val userProfileState by userProfileViewModel.userProfileState.observeAsState()
+
+    var cellPhone by remember { mutableStateOf("") }
+
+    var profileImageUri by remember { mutableStateOf<String?>(null) }
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? -> profileImageUri = uri.toString() }
+
+    LaunchedEffect(Unit) {
+        viewModel.getUserInfo(context)
+        countryViewModel.fetchCountries()
+        userProfileViewModel.getProfile(context)
+
+    }
+
+
+    userProfileState?.let { profileState ->
+        when (profileState) {
+            is UserProfileState.Loading -> {
+            }
+            is UserProfileState.Success -> {
+                val profile = profileState.user
+                selectedCountry = countries.find { it.id == profile.country_id }?.name ?: "Seleccionar país"
+                selectedState = states.find { it.id == profile.state_id }?.name ?: "Seleccionar estado"
+                selectedCity = cities.find { it.id == profile.city_id }?.name ?: "Seleccionar ciudad"
+
+                cellPhone = profile.cell_phone ?: ""
+
+                var profilePhotoUri = profileState.user.photo
+                Log.d("ProfilePhotoURI", "Photo URI: $profilePhotoUri")
+
+                if (!profilePhotoUri.isNullOrEmpty()) {
+                    profilePhotoUri = profilePhotoUri.replace("http://", "https://")
+                    profileImageUri = profilePhotoUri
+                }
+
+                if (profile.country_id != null) {
+                    stateViewModel.fetchStatesByCountry(profile.country_id)
+                }
+                if (profile.state_id != null) {
+                    cityViewModel.fetchCitiesByState(profile.state_id)
+                }
+
+
+            }
+            is UserProfileState.Error -> {
+                // Mostrar mensaje de error si es necesario
+            }
+        }
+    }
+
+
 
 
     @Composable
@@ -230,21 +346,65 @@ fun ProfileScreen(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
+                    val imageModifier = Modifier
+                        .size(100.dp)
+                        .padding(bottom = 13.dp)
+                        .clickable {
+                            launcher.launch("image/*")
+                        }
+
+                    Log.d("ProfileScreen", "ProfileImageUri: $profileImageUri")
+
                     Image(
-                        painter = painterResource(id = R.drawable.profile),
-                        contentDescription = "Perfil",
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(bottom = 13.dp)
-                    )
-                    Text(
-                        text = "Alfonso Juan",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 21.sp
+                        painter = rememberImagePainter(
+                            data = profileImageUri,
+                            builder = {
+                                crossfade(true)
+                                placeholder(R.drawable.profile) // Imagen temporal
+                                error(R.drawable.profile) // Imagen de error
+                                listener(
+                                    onSuccess = { _, _ ->
+                                        Log.d("ImageLoader", "Image loaded successfully.")
+                                    },
+                                    onError = { _, result ->
+                                        Log.e("ImageLoader", "Error loading image: ${result.throwable}")
+                                    }
+                                )
+                            }
                         ),
-                        textAlign = TextAlign.Center
+                        contentDescription = "Perfil",
+                        modifier = imageModifier
                     )
+
+
+
+                    when (meState) {
+                        is MeState.Success -> {
+                            val user = (meState as MeState.Success).user
+                            val fullName = "${user.name} ${user.last_name}"
+
+                            // Mostrar el nombre completo
+                            Text(
+                                text = fullName,
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 21.sp
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        is MeState.Error -> {
+                            Text(
+                                text = "Error: ${(meState as MeState.Error).message}",
+                                color = Color.Red,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+                        }
+                        else -> {
+                            // Mostrar texto vacío o mensaje de error si no hay datos disponibles
+
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -269,73 +429,86 @@ fun ProfileScreen(navController: NavController) {
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(bottom = 7.dp).align(Alignment.Start)
                     )
-                    TextField(
-                        value = "Alfonso Juan",
-                        onValueChange = { },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFF003049), shape = RoundedCornerShape(25.dp)),
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        shape = RoundedCornerShape(16.dp),
-                        trailingIcon = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(end = 8.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.editar),
-                                    contentDescription = "Editar",
-                                    modifier = Modifier
-                                        .clickable {
-                                            // Lógica para editar aquí, por ejemplo, abrir un diálogo
-                                        }
-                                        .padding(4.dp)
-                                )
-                            }
+                    when (meState) {
+                        is MeState.Success -> {
+                            val user = (meState as MeState.Success).user
+                            val fullName = "${user.name} ${user.last_name}"
+                            TextField(
+                                value = fullName,
+                                onValueChange = { },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(1.dp, Color(0xFF003049), shape = RoundedCornerShape(25.dp)),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                shape = RoundedCornerShape(16.dp),
+                            )
                         }
-                    )
+                        else -> {
+                            // Si no hay datos disponibles, mostrar un campo vacío
+                            TextField(
+                                value = "",
+                                onValueChange = { },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(1.dp, Color(0xFF003049), shape = RoundedCornerShape(25.dp)),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                shape = RoundedCornerShape(16.dp),
+                            )
+                        }
+                    }
+
 
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "E-mail",
+                        text = "Email",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(bottom = 7.dp).align(Alignment.Start)
                     )
-                    TextField(
-                        value = "alfonsojuan@gmail.com",
-                        onValueChange = { },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFF003049), shape = RoundedCornerShape(25.dp)),
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        shape = RoundedCornerShape(16.dp),
-                        trailingIcon = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(end = 8.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.editar),
-                                    contentDescription = "Editar",
-                                    modifier = Modifier
-                                        .clickable {
-                                            // Lógica para editar aquí, por ejemplo, abrir un diálogo
-                                        }
-                                        .padding(4.dp)
-                                )
-                            }
+                    when (meState) {
+                        is MeState.Success -> {
+                            val user = (meState as MeState.Success).user
+                            TextField(
+                                value = user.email,
+                                onValueChange = { },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(1.dp, Color(0xFF003049), shape = RoundedCornerShape(25.dp)),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                shape = RoundedCornerShape(16.dp),
+                            )
                         }
-                    )
+                        else -> {
+                            TextField(
+                                value = "",
+                                onValueChange = { },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(1.dp, Color(0xFF003049), shape = RoundedCornerShape(25.dp)),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                shape = RoundedCornerShape(16.dp),
+                            )
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -344,8 +517,8 @@ fun ProfileScreen(navController: NavController) {
                         modifier = Modifier.padding(bottom = 7.dp) .align(Alignment.Start)
                     )
                     TextField(
-                        value = "+57 3132309796",
-                        onValueChange = { },
+                        value = cellPhone,
+                        onValueChange = { cellPhone = it },
                         singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -356,116 +529,151 @@ fun ProfileScreen(navController: NavController) {
                             unfocusedIndicatorColor = Color.Transparent
                         ),
                         shape = RoundedCornerShape(16.dp),
-                        trailingIcon = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(end = 8.dp)
-                            ) {
-
-                                Icon(
-                                    painter = painterResource(id = R.drawable.editar),
-                                    contentDescription = "Editar",
-                                    modifier = Modifier
-                                        .clickable {
-                                            // Lógica para editar aquí, por ejemplo, abrir un diálogo
-                                        }
-                                        .padding(4.dp)
-                                )
-
-                                Icon(
-                                    painter = painterResource(id = R.drawable.eliminar),
-                                    contentDescription = "Eliminar",
-                                    modifier = Modifier
-                                        .clickable {
-                                            // Lógica para eliminar aquí, por ejemplo, mostrar un mensaje
-                                        }
-                                        .padding(4.dp)
-                                )
-                            }
-                        }
                     )
 
 
 
                     Spacer(modifier = Modifier.height(8.dp))
+
                     Text(
-                        text = "Genero",
+                        text = "Pais",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(bottom = 7.dp) .align(Alignment.Start)
                     )
-                    TextField(
-                        value = "Masculino",
-                        onValueChange = { },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFF003049), shape = RoundedCornerShape(25.dp)),
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        shape = RoundedCornerShape(16.dp),
-                        trailingIcon = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(end = 8.dp)
-                            ) {
-
-                                Icon(
-                                    painter = painterResource(id = R.drawable.editar),
-                                    contentDescription = "Editar",
-                                    modifier = Modifier
-                                        .clickable {
-                                            // Lógica para editar aquí, por ejemplo, abrir un diálogo
-                                        }
-                                        .padding(4.dp)
-                                )
-
+                    androidx.compose.material3.ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { expanded = !expanded }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedCountry,
+                            onValueChange = { },
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                            },
+                            shape = RoundedCornerShape(20.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor()
+                                .background(Color.White, shape = RoundedCornerShape(16.dp))
+                                .clickable {
+                                    expanded = !expanded
+                                }
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            countries.forEach { country ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedCountry = country.name
+                                        countryViewModel.selectCountry(country.name)
+                                        stateViewModel.fetchStatesByCountry(country.id)
+                                        expanded = false
+                                    },
+                                    modifier = Modifier.background(Color.White)
+                                ) {
+                                    Text(text = country.name)
+                                }
                             }
                         }
+                    }
+
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Estado",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(bottom = 7.dp) .align(Alignment.Start)
                     )
+                    androidx.compose.material3.ExposedDropdownMenuBox(
+                        expanded = stateDropdownExpanded,
+                        onExpandedChange = { stateDropdownExpanded = !stateDropdownExpanded }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedState,
+                            onValueChange = { },
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = stateDropdownExpanded)
+                            },
+                            shape = RoundedCornerShape(20.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor()
+                                .background(Color.White, shape = RoundedCornerShape(16.dp))
+                                .clickable { stateDropdownExpanded = !stateDropdownExpanded }
+                        )
+                        ExposedDropdownMenu(
+                            expanded = stateDropdownExpanded,
+                            onDismissRequest = { stateDropdownExpanded = false }
+                        ) {
+                            states.forEach { state ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedState = state.name
+                                        stateViewModel.selectState(state.name)
+                                        cityViewModel.fetchCitiesByState(state.id)
+                                        stateDropdownExpanded = false
+                                    },
+                                    modifier = Modifier.background(Color.White)
+                                ) {
+                                    Text(text = state.name)
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+
+                    Text(
+                        text = "Ciudad",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(bottom = 7.dp) .align(Alignment.Start)
+                    )
+                    androidx.compose.material3.ExposedDropdownMenuBox(
+                        expanded = cityDropdownExpanded,
+                        onExpandedChange = { cityDropdownExpanded = !cityDropdownExpanded }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedCity,
+                            onValueChange = { },
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = cityDropdownExpanded)
+                            },
+                            shape = RoundedCornerShape(20.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor()
+                                .background(Color.White, shape = RoundedCornerShape(16.dp))
+                                .clickable { cityDropdownExpanded = !cityDropdownExpanded }
+                        )
+                        ExposedDropdownMenu(
+                            expanded = cityDropdownExpanded,
+                            onDismissRequest = { cityDropdownExpanded = false }
+                        ) {
+                            cities.forEach { city ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedCity = city.name
+                                        cityViewModel.selectCity(city.name)
+                                        cityDropdownExpanded = false
+                                    },
+                                    modifier = Modifier.background(Color.White)
+                                ) {
+                                    Text(text = city.name)
+                                }
+                            }
+                        }
+                    }
 
 
 
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Fecha de nacimiento",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(bottom = 7.dp) .align(Alignment.Start)
-                    )
-                    TextField(
-                        value = "04/10/1988",
-                        onValueChange = { },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFF003049), shape = RoundedCornerShape(25.dp)),
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        shape = RoundedCornerShape(16.dp),
-                        trailingIcon = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(end = 8.dp)
-                            ) {
-
-                                Icon(
-                                    painter = painterResource(id = R.drawable.editar),
-                                    contentDescription = "Editar",
-                                    modifier = Modifier
-                                        .clickable {
-                                            // Lógica para editar aquí, por ejemplo, abrir un diálogo
-                                        }
-                                        .padding(4.dp)
-                                )
-
-                            }
-                        }
-                    )
 
 
 
@@ -473,9 +681,23 @@ fun ProfileScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(8.dp))
                     androidx.compose.material3.Button(
                         onClick = {
-                            navController.navigate(
-                                NavigationItem.Profile.route
+                            val selectedCountryId = countries.find { it.name == selectedCountry }?.id
+                            val selectedStateId = states.find { it.name == selectedState }?.id
+                            val selectedCityId = cities.find { it.name == selectedCity }?.id
+
+                            val userProfileModel = UserProfileModel(
+                                id = userProfileState?.let { (it as? UserProfileState.Success)?.user?.id } ?: 0,
+                                cell_phone = cellPhone,
+                                country_id = selectedCountryId,
+                                state_id = selectedStateId,
+                                city_id = selectedCityId,
+                                photo = profileImageUri,
+                                user_id = userProfileState?.let { (it as? UserProfileState.Success)?.user?.user_id } ?: 0, // Asignar user_id del perfil
+                                createdAt = userProfileState?.let { (it as? UserProfileState.Success)?.user?.createdAt } ?: "",
+                                updatedAt = userProfileState?.let { (it as? UserProfileState.Success)?.user?.updatedAt } ?: ""
                             )
+
+                            userProfileViewModel.updateUserProfile(context, userProfileModel)
                         },
                         modifier = Modifier
                             .padding(20.dp)
@@ -486,11 +708,13 @@ fun ProfileScreen(navController: NavController) {
                     ) {
                         androidx.compose.material3.Text("Guardar", color = Color.White)
                     }
+
                 }
             }
         )
     }
 }
+
 
 @Composable
 fun DrawerHeader() {
