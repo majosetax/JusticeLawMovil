@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -27,6 +28,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -60,7 +63,7 @@ import com.example.justicelawmovil.navigation.NavigationItem
 
 
 @Composable
-fun Historial(navController: NavController) {
+fun PerfilRespuestaAbogado(navController: NavController) {
 
     val homeIcon: Painter = painterResource(id = R.drawable.home)
     val searchIcon: Painter = painterResource(id = R.drawable.search)
@@ -93,22 +96,13 @@ fun Historial(navController: NavController) {
                 }
 
                 Text(
-                    text = "Historial",
+                    text = "Mis respuestas y categorias",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = 8.dp)
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
 
-                IconButton(onClick = { /* Lógica de búsqueda */ }) {
-                    Icon(
-                        painter = searchIcon,
-                        contentDescription = "Buscar",
-                        modifier = Modifier.size(24.dp),
-                        tint = Color.Black
-                    )
-                }
             }
         }
     }
@@ -189,121 +183,145 @@ fun Historial(navController: NavController) {
             ) {
 
 
-                Text(text = "Borrar datos de navegación...", color = Color(0xFFCF9E3E))
-                Spacer(modifier = Modifier.height(14.dp))
+                // Filtro tipo select
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        text = "Más recientes",
+                        fontSize = 16.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "Abrir filtro",
+                        modifier = Modifier.clickable {
+                            // Acción para abrir el menú desplegable
+                        }
+                    )
+                }
 
-
-                Text(text = "12 de abril, 2024", fontSize = 14.sp, color = Color.Gray)
-
-                for (i in 1..4) {
-
-
-                    Row(
+                // Contenido de las respuestas
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    // Foto de perfil
+                    Image(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = "Foto de perfil",
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .border(1.dp, Color.Gray, CircleShape)
+                    )
 
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = "I", color = Color.White, fontWeight = FontWeight.Bold)
-                        }
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                        Row(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = "Se ha visitado ",
-                                color = Color.Black,
-                                fontSize = 16.sp
-                            )
-                            Text(
-                                text = "La tutela",
-                                color = Color(0xFF00A8FF),
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .clickable(onClick = {
-                                        // Lógica para manejar el clic
-                                    })
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        IconButton(onClick = { /* Lógica para eliminar */ }) {
-                            Image(
-                                painter = painterResource(id = R.drawable.cancelar),
-                                contentDescription = "Eliminar",
-                                modifier = Modifier.size(24.dp),
-
-                            )
-                        }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Andres Lopez",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            text = "Usuario",
+                            fontSize = 12.sp,
+                            color = Color.Gray
+                        )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "11 de abril, 2024", fontSize = 14.sp, color = Color.Gray)
+                // Título y contenido de la pregunta
+                Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Text(
+                        text = "¿Qué pasos debo seguir en un proceso de divorcio?",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
 
-                for (i in 1..4) {
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Text(
+                        text = "María y Juan están casados desde hace diez años, pero su relación se ha deteriorado. Juan trabaja mucho y apenas están juntos. Discuten frecuentemente y María se siente sola y abandonada emocionalmente. Además, descubrió que Juan tiene una aventura emocional con una compañera de trabajo. Considera el divorcio como la mejor opción para seguir adelante.",
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "30 de marzo, 2024",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(20.dp))
+
+                Text(
+                    text = "Respuestas:",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
 
 
-                    Row(
+                Spacer(modifier = Modifier.width(20.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    // Foto de perfil
+                    Image(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = "Foto de perfil",
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .border(1.dp, Color.Gray, CircleShape)
+                    )
 
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = "I", color = Color.White, fontWeight = FontWeight.Bold)
-                        }
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                        Row(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = "Se ha visitado ",
-                                color = Color.Black,
-                                fontSize = 16.sp
-                            )
-                            Text(
-                                text = "La tutela",
-                                color = Color(0xFF00A8FF),
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .clickable(onClick = {
-                                        // Lógica para manejar el clic
-                                    })
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        IconButton(onClick = { /* Lógica para eliminar */ }) {
-                            Image(
-                                painter = painterResource(id = R.drawable.cancelar),
-                                contentDescription = "Eliminar",
-                                modifier = Modifier.size(24.dp),
-
-                                )
-                        }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "David Astrada",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            text = "Abogado",
+                            fontSize = 12.sp,
+                            color = Color.Gray
+                        )
                     }
                 }
+
+
+
+            Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Text(
+                        text = "María y Juan están casados desde hace diez años, pero su relación se ha deteriorado. Juan trabaja mucho y apenas están juntos. Discuten frecuentemente y María se siente sola y abandonada emocionalmente. Además, descubrió que Juan tiene una aventura emocional con una compañera de trabajo. Considera el divorcio como la mejor opción para seguir adelante.",
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "30 de marzo, 2024",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+
+
+            }
             }
 
 
 
-        }
+
     )
 }
 

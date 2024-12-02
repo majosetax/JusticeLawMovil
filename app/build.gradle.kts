@@ -66,6 +66,12 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.3.0-beta04")
     implementation("com.google.accompanist:accompanist-pager:0.30.1")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.4.0")
+    implementation ("androidx.compose.material:material-icons-extended:1.4.0")
+    implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
+    implementation("io.coil-kt:coil-compose:2.4.0") // Verifica la última versión disponible
+
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)

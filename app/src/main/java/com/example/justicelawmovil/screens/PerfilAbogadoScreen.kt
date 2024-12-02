@@ -205,8 +205,13 @@ fun PerfilAbogado(navController: NavController) {
     }
 
     @Composable
-    fun BottomBar(navController: NavController, homeIcon: Painter, searchIcon: Painter, forumIcon: Painter) {
-        BottomAppBar(
+    fun BottomBar(
+        navController: NavController,
+        homeIcon: Painter,
+        searchIcon: Painter,
+        forumIcon: Painter
+    ) {
+        androidx.compose.material3.BottomAppBar(
             modifier = Modifier
                 .padding(16.dp)
                 .height(60.dp)
@@ -219,14 +224,38 @@ fun PerfilAbogado(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxSize()
             ) {
-                IconButton(onClick = { navController.navigate(NavigationItem.Home.route) }) {
-                    androidx.compose.material3.Icon(painter = homeIcon, contentDescription = "Home", tint = Color.White)
+                androidx.compose.material3.IconButton(onClick = {
+                    navController.navigate(
+                        NavigationItem.Home.route
+                    )
+                }) {
+                    androidx.compose.material3.Icon(
+                        painter = homeIcon,
+                        contentDescription = "Home",
+                        tint = Color.White
+                    )
                 }
-                IconButton(onClick = { /* Boton informaciones */ }) {
-                    androidx.compose.material3.Icon(painter = searchIcon, contentDescription = "Search", tint = Color.White)
+                androidx.compose.material3.IconButton(onClick = {
+                    navController.navigate(
+                        NavigationItem.Informacion.route
+                    )
+                }) {
+                    androidx.compose.material3.Icon(
+                        painter = searchIcon,
+                        contentDescription = "Search",
+                        tint = Color.White
+                    )
                 }
-                IconButton(onClick = { /* Acción del botón de perfil */ }) {
-                    androidx.compose.material3.Icon(painter = forumIcon, contentDescription = "Foro", tint = Color.White)
+                androidx.compose.material3.IconButton(onClick = {
+                    navController.navigate(
+                        NavigationItem.Foro.route
+                    )
+                }) {
+                    androidx.compose.material3.Icon(
+                        painter = forumIcon,
+                        contentDescription = "Foro",
+                        tint = Color.White
+                    )
                 }
             }
         }

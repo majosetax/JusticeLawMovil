@@ -225,7 +225,7 @@ fun VerPerfilAbogado(navController: NavController) {
         searchIcon: Painter,
         forumIcon: Painter
     ) {
-        BottomAppBar(
+        androidx.compose.material3.BottomAppBar(
             modifier = Modifier
                 .padding(16.dp)
                 .height(60.dp)
@@ -238,21 +238,33 @@ fun VerPerfilAbogado(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxSize()
             ) {
-                IconButton(onClick = { navController.navigate(NavigationItem.Home.route) }) {
+                androidx.compose.material3.IconButton(onClick = {
+                    navController.navigate(
+                        NavigationItem.Home.route
+                    )
+                }) {
                     androidx.compose.material3.Icon(
                         painter = homeIcon,
                         contentDescription = "Home",
                         tint = Color.White
                     )
                 }
-                IconButton(onClick = { /* Boton informaciones */ }) {
+                androidx.compose.material3.IconButton(onClick = {
+                    navController.navigate(
+                        NavigationItem.Informacion.route
+                    )
+                }) {
                     androidx.compose.material3.Icon(
                         painter = searchIcon,
                         contentDescription = "Search",
                         tint = Color.White
                     )
                 }
-                IconButton(onClick = { /* Acción del botón de perfil */ }) {
+                androidx.compose.material3.IconButton(onClick = {
+                    navController.navigate(
+                        NavigationItem.Foro.route
+                    )
+                }) {
                     androidx.compose.material3.Icon(
                         painter = forumIcon,
                         contentDescription = "Foro",
@@ -399,7 +411,7 @@ fun VerPerfilAbogado(navController: NavController) {
 
                     when (selectedSection) {
                         "Sobre Mi" -> {
-                            SobreMiContent()
+                            SobreMiContent(navController = navController)
                         }
                         "Hoja de Vida" -> {
                             HojaDeVidaContent()
@@ -416,7 +428,7 @@ fun VerPerfilAbogado(navController: NavController) {
 }
 
 @Composable
-fun SobreMiContent() {
+fun SobreMiContent(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -466,7 +478,7 @@ fun SobreMiContent() {
         Text(text = "Actividad", fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(8.dp))
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription = "Agregar")
-            Text(text = "Ver el historial de asesoramiento legal", color = Color(0xFF00A8FF), modifier = Modifier.clickable { /* Acción */ })
+            Text(text = "Ver el historial de asesoramiento legal", color = Color(0xFF00A8FF), modifier = Modifier.clickable { navController.navigate(NavigationItem.PerfilRespuestaAbogado.route) })
         }
     }
 }
@@ -536,14 +548,13 @@ fun ReseñasContent() {
                     placeholder = { Text("Escribe tu reseña") },
                     modifier = Modifier.fillMaxWidth()
                 )
-                // Estrellas para calificación
-                // Implementación de las estrellas
+
                 Row {
                     repeat(5) {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Calificación",
-                            tint = Color.White,
+                            tint = Color.Gray,
                             modifier = Modifier.clickable { /* Acción para seleccionar estrella */ }
                         )
                     }

@@ -1,6 +1,7 @@
 package com.example.justicelawmovil.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,6 +45,12 @@ import com.example.justicelawmovil.viewModel.NotificationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 @Composable
 fun NotificationsScreen(navController: NavController) {
@@ -159,25 +166,57 @@ fun TopBar(drawerState: DrawerState, scope: CoroutineScope) {
 }
 
 @Composable
-fun BottomBar(navController: NavController, homeIcon: Painter, searchIcon: Painter, forumIcon: Painter) {
-    BottomAppBar(
+fun BottomBar(
+    navController: NavController,
+    homeIcon: Painter,
+    searchIcon: Painter,
+    forumIcon: Painter
+) {
+    androidx.compose.material3.BottomAppBar(
+        modifier = Modifier
+            .padding(16.dp)
+            .height(60.dp)
+            .clip(RoundedCornerShape(25.dp)),
         containerColor = Color(0xFF003049),
         contentColor = Color.White,
-        modifier = Modifier.clip(RoundedCornerShape(25.dp))
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxSize()
         ) {
-            IconButton(onClick = { navController.navigate(NavigationItem.Home.route) }) {
-                Icon(painter = homeIcon, contentDescription = "Home")
+            androidx.compose.material3.IconButton(onClick = {
+                navController.navigate(
+                    NavigationItem.Home.route
+                )
+            }) {
+                androidx.compose.material3.Icon(
+                    painter = homeIcon,
+                    contentDescription = "Home",
+                    tint = Color.White
+                )
             }
-            IconButton(onClick = { /* Acción del botón de búsqueda */ }) {
-                Icon(painter = searchIcon, contentDescription = "Search")
+            androidx.compose.material3.IconButton(onClick = {
+                navController.navigate(
+                    NavigationItem.Informacion.route
+                )
+            }) {
+                androidx.compose.material3.Icon(
+                    painter = searchIcon,
+                    contentDescription = "Search",
+                    tint = Color.White
+                )
             }
-            IconButton(onClick = { /* Acción del botón del foro */ }) {
-                Icon(painter = forumIcon, contentDescription = "Foro")
+            androidx.compose.material3.IconButton(onClick = {
+                navController.navigate(
+                    NavigationItem.Foro.route
+                )
+            }) {
+                androidx.compose.material3.Icon(
+                    painter = forumIcon,
+                    contentDescription = "Foro",
+                    tint = Color.White
+                )
             }
         }
     }
@@ -185,6 +224,10 @@ fun BottomBar(navController: NavController, homeIcon: Painter, searchIcon: Paint
 
 @Composable
 fun NotificationItem(title: String, description: String) {
+    var isExpanded by remember { mutableStateOf(false) }
+    var showMenu by remember { mutableStateOf(false) } // Estado para el menú desplegable
+    var isLiked by remember { mutableStateOf(false) } // Estado para el corazón
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -193,12 +236,77 @@ fun NotificationItem(title: String, description: String) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.Start
+            modifier = Modifier
+                .padding(16.dp)
         ) {
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
+            // Encabezado con título, corazón y menú
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // Título
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                )
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Corazón para "Me gusta"
+                    IconButton(onClick = { isLiked = !isLiked }) {
+                        Icon(
+                            imageVector = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "Me gusta",
+                            tint = if (isLiked) MaterialTheme.colorScheme.primary else Color.Gray
+                        )
+                    }
+
+                    // Menú desplegable con tres puntos
+                    Box {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.menu), // Reemplazar con tu ícono de tres puntos
+                                contentDescription = "Más opciones"
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                onClick = { /* Marcar como leído */ },
+                                text = { Text("Marcar como leído") }
+                            )
+                            DropdownMenuItem(
+                                onClick = { /* Archivar notificación */ },
+                                text = { Text("Archivar notificación") }
+                            )
+                            DropdownMenuItem(
+                                onClick = { /* Eliminar notificación */ },
+                                text = { Text("Eliminar notificación") }
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Descripción principal
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = description, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
+
+            // Contenido desplegable hola
+            if (isExpanded) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Información adicional de la notificación.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
