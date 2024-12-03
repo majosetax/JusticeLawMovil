@@ -55,25 +55,68 @@ import com.example.justicelawmovil.viewModel.RegisterViewModel
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.justicelawmovil.viewModel.CityViewModel
+import com.example.justicelawmovil.viewModel.CountryViewModel
+import com.example.justicelawmovil.viewModel.StateViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun VerificationLawyerScreen(navController: NavController,
+                             viewModel: RegisterViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+                                     countryViewModel: CountryViewModel = viewModel(),
+                             stateViewModel: StateViewModel = viewModel(),
+                             cityViewModel: CityViewModel = viewModel())
+{
+
     val state by viewModel.registerState.collectAsState()
     val typeDocuments by viewModel.typeDocuments.collectAsState()
 
-    var name by remember { mutableStateOf("") }
+    val countries by countryViewModel.countries.observeAsState(emptyList())
+
+    var selectedCountry by remember { mutableStateOf("Seleccionar país") }
+
+    val states by stateViewModel.states.collectAsState()
+    var selectedState by remember { mutableStateOf("Seleccionar estado") }
+
+    val cities by cityViewModel.cities.collectAsState()
+    var selectedCity by remember { mutableStateOf("Seleccionar ciudad") }
+
+    var cell_phone by remember { mutableStateOf("") }
+
+
+    var level by remember { mutableStateOf("") }
+
+    var training_place by remember { mutableStateOf("") }
+
+
     var lastName by remember { mutableStateOf("") }
     var selectedTypeDocument by remember { mutableStateOf<TypeDocumentModel?>(null) }
     var documentNumber by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
     var expanded by remember { mutableStateOf(false) }
+
+    var stateDropdownExpanded by remember { mutableStateOf(false) }
+
+    var cityDropdownExpanded by remember { mutableStateOf(false) }
 
     var showSuccessMessage by remember { mutableStateOf(false) }
     var isPasswordVisible by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(Unit) {
+
+        countryViewModel.fetchCountries()
+
+
+    }
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -88,68 +131,168 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = Color(0xFF001C36), fontWeight = FontWeight.Bold)) {
-                        append("Justice")
-                    }
-                    withStyle(style = SpanStyle(color = Color(0xFFCF9E3E), fontWeight = FontWeight.Bold)) {
-                        append("Law")
+                        append("Verificación Abogado")
                     }
                 },
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 28.sp,
-                )
+                fontSize = 24.sp // Puedes ajustar el tamaño del texto según tu necesidad
             )
 
             Text(
-                text = "Leyes claras, justicia real",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 16.sp,
-                    color = Color(0xFF001C36)
-                ),
-                modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+                text = "Ingresa tus datos para poder aprobar tu cuenta.",
+                color = Color(0xFF001C36), // El mismo color
+                fontSize = 14.sp // Texto más pequeño
             )
 
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp)
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+
+            OutlinedTextField(
+                value = cell_phone,
+                onValueChange = { cell_phone = it },
+                label = { Text("Numero de Telefono") }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            androidx.compose.material3.ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
             ) {
-                OutlinedButton(
-                    onClick = {
-                        navController.navigate(NavigationItem.Login.route)
+                OutlinedTextField(
+                    value = selectedCountry,
+                    onValueChange = { },
+                    label = { Text("Seleccione el país") },
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
-                    shape = RoundedCornerShape(50),
                     modifier = Modifier
-                        .weight(1f)
-                        .height(40.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFF001C36)
-                    ),
-                    border = BorderStroke(1.dp, Color(0xFF001C36))
+                        .fillMaxWidth()
+                        .menuAnchor()
+                        .background(Color.White)
+                        .clickable {
+                            expanded = !expanded
+                        }
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
                 ) {
-                    Text(text = "Iniciar Sesion")
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Button(
-                    onClick = { },
-                    colors = ButtonDefaults.buttonColors(Color(0xFF001C36)),
-                    shape = RoundedCornerShape(50),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(40.dp)
-                ) {
-                    Text(text = "Registrarse", color = Color.White)
+                    countries.forEach { country ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedCountry = country.name
+                                countryViewModel.selectCountry(country.name)
+                                stateViewModel.fetchStatesByCountry(country.id)
+                                expanded = false
+                            },
+                            modifier = Modifier.background(Color.White)
+                        ) {
+                            androidx.compose.material.Text(text = country.name)
+                        }
+                    }
                 }
             }
 
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            androidx.compose.material3.ExposedDropdownMenuBox(
+                expanded = stateDropdownExpanded,
+                onExpandedChange = { stateDropdownExpanded = !stateDropdownExpanded }
+            ) {
+                OutlinedTextField(
+                    value = selectedState,
+                    onValueChange = { },
+                    label = { Text("Seleccione el estado") },
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = stateDropdownExpanded)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+                        .background(Color.White)
+                        .clickable { stateDropdownExpanded = !stateDropdownExpanded }
+                )
+                ExposedDropdownMenu(
+                    expanded = stateDropdownExpanded,
+                    onDismissRequest = { stateDropdownExpanded = false }
+                ) {
+                    states.forEach { state ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedState = state.name
+                                stateViewModel.selectState(state.name)
+                                cityViewModel.fetchCitiesByState(state.id)
+                                stateDropdownExpanded = false
+                            },
+                            modifier = Modifier.background(Color.White)
+                        ) {
+                            androidx.compose.material.Text(text = state.name)
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            androidx.compose.material3.ExposedDropdownMenuBox(
+                expanded = cityDropdownExpanded,
+                onExpandedChange = { cityDropdownExpanded = !cityDropdownExpanded }
+            ) {
+                OutlinedTextField(
+                    value = selectedCity,
+                    onValueChange = { },
+                    label = { Text("Seleccione la ciudad") },
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = cityDropdownExpanded)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+                        .background(Color.White)
+                        .clickable { cityDropdownExpanded = !cityDropdownExpanded }
+                )
+                ExposedDropdownMenu(
+                    expanded = cityDropdownExpanded,
+                    onDismissRequest = { cityDropdownExpanded = false }
+                ) {
+                    cities.forEach { city ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedCity = city.name
+                                cityViewModel.selectCity(city.name)
+                                cityDropdownExpanded = false
+                            },
+                            modifier = Modifier.background(Color.White)
+                        ) {
+                            androidx.compose.material.Text(text = city.name)
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Nombre") }
+                value = level,
+                onValueChange = { level = it },
+                label = { Text("Nivel Educativo") }
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = training_place,
+                onValueChange = { training_place = it },
+                label = { Text("Lugar de formación") }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+
             OutlinedTextField(
                 value = lastName,
                 onValueChange = { lastName = it },
@@ -157,48 +300,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
-                }
-            ) {
-                OutlinedTextField(
-                    value = selectedTypeDocument?.let { "${it.code} - ${it.description}" }
-                        ?: "Tipo de documento",
-                    onValueChange = { },
-                    label = { Text("Tipo de documento") },
-                    readOnly = true,
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .clickable {
-                            expanded = !expanded
-                            Log.d("Dropdown", "Dropdown clicked. Expanded: $expanded")
-                        }
-                )
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                        Log.d("Dropdown", "Dropdown dismissed")
-                    }
-                ) {
-                    typeDocuments.forEach { document ->
-                        DropdownMenuItem(onClick = {
-                            selectedTypeDocument = document
-                            expanded = false
-                            Log.d("Dropdown", "Document selected: ${document.code} - ${document.description}")
-                        },
-                            modifier = Modifier.background(Color.White)
-                        ) {
-                            Text(text = "${document.code} - ${document.description}")
-                        }
-                    }
-                }
-            }
+
 
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
@@ -236,7 +338,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
                         Log.d("Register", "Registering user with document type ID: ${selectedTypeDocument!!.id}")
                         viewModel.registerUser(
                             RegisterRequest(
-                                name = name,
+                                name = cell_phone,
                                 last_name = lastName,
                                 type_document_id = selectedTypeDocument!!.id.toString(),
                                 document_number = documentNumber,
@@ -292,8 +394,3 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RegisterScreenPreview() {
-    RegisterScreen(rememberNavController())
-}

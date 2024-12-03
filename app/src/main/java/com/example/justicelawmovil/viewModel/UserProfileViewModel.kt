@@ -51,37 +51,7 @@ class UserProfileViewModel : ViewModel() {
         }
     }
 
-    fun updateUserProfile(context: Context, userProfileModel: UserProfileModel) {
-        viewModelScope.launch {
-            _userProfileState.value = UserProfileState.Loading
 
-            val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("token", null)
-
-            if (token == null) {
-                _userProfileState.value = UserProfileState.Error("Token no encontrado")
-                return@launch
-            }
-
-            try {
-                val response = apiService.updateUserProfile("Bearer $token", userProfileModel)
-                if (response.isSuccessful) {
-                    val profile = response.body()
-                    if (profile != null) {
-                        _userProfileState.value = UserProfileState.Success(profile)
-                    } else {
-                        _userProfileState.value = UserProfileState.Error("Error al actualizar perfil")
-                    }
-                } else {
-                    val errorMessage = response.errorBody()?.string() ?: "Error desconocido"
-                    _userProfileState.value = UserProfileState.Error(errorMessage)
-                }
-            } catch (e: Exception) {
-                Log.e("UserProfileViewModel", "Error de conexión: ${e.message}")
-                _userProfileState.value = UserProfileState.Error("Error de conexión")
-            }
-        }
-    }
 
 }
 

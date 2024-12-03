@@ -27,6 +27,7 @@ import com.example.justicelawmovil.screens.PerfilAbogado
 import com.example.justicelawmovil.screens.PerfilRespuestaAbogado
 import com.example.justicelawmovil.screens.ProfileScreen
 import com.example.justicelawmovil.screens.ReestablecimientoExitoso
+import com.example.justicelawmovil.screens.RegisterLawyerScreen
 import com.example.justicelawmovil.screens.RegisterScreen
 import com.example.justicelawmovil.screens.UserListScreen
 import com.example.justicelawmovil.screens.VerPerfilAbogado
@@ -169,6 +170,13 @@ fun AppNavHost(
             route = NavigationItem.Divorcio.route
         ) {
             DivorcioScreen(navController)
+
+        }
+
+        composable(
+            route = NavigationItem.RegisterLawyer.route
+        ) {
+            RegisterLawyerScreen(navController)
 
         }
         

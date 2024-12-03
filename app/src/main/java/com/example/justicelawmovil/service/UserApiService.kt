@@ -46,6 +46,34 @@ data class LogoutResponse(
     val message: String
 )
 
+data class UpdateProfileRequest(
+    val cell_phone: String?,
+    val country_id: Int?,
+    val state_id: Int?,
+    val city_id: Int?,
+    val profile_photo: String?
+)
+
+data class UpdateProfileResponse(
+    val message: String,
+    val photo: String?
+)
+
+data class RegisterLawyerRequest(
+    val name: String,
+    val last_names: String,
+    val type_document_id: String,
+    val document_number: String,
+    val email: String,
+    val password: String
+)
+
+data class RegisterLawyerResponse(
+    val id: Int, // Ajusta según la respuesta del API
+    val name: String,
+    val email: String,
+    val created_at: String
+)
 
 interface UserApiService {
     @GET("users")
@@ -78,8 +106,13 @@ interface UserApiService {
     @GET("getprofile")
     suspend fun getProfile(@Header("Authorization") token: String): Response<UserProfileModel>
 
-    @POST("profile") suspend fun updateUserProfile (@Header("Authorization") token: String,
-        @Body userProfileModel: UserProfileModel
-    ): Response<UserProfileModel>
+    @POST("profile")
+    suspend fun updateProfile(
+        @Header("Authorization") token: String,
+        @Body request: UpdateProfileRequest
+    ): Response<UpdateProfileResponse>
+
+    @POST("registerLawyerMovil")
+    suspend fun registerLawyer(@Body request: RegisterLawyerRequest): Response<RegisterLawyerResponse>
 
 }

@@ -3,6 +3,7 @@ package com.example.justicelawmovil.screens
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -83,11 +85,14 @@ import com.example.justicelawmovil.R
 import com.example.justicelawmovil.model.UserProfileModel
 import com.example.justicelawmovil.navigation.NavigationItem
 import com.example.justicelawmovil.screens.HomeScreen
+import com.example.justicelawmovil.service.UpdateProfileRequest
 import com.example.justicelawmovil.viewModel.CityViewModel
 import com.example.justicelawmovil.viewModel.CountryViewModel
 import com.example.justicelawmovil.viewModel.MeState
 import com.example.justicelawmovil.viewModel.MeViewModel
 import com.example.justicelawmovil.viewModel.StateViewModel
+import com.example.justicelawmovil.viewModel.UpdateProfileState
+import com.example.justicelawmovil.viewModel.UpdateProfileViewModel
 import com.example.justicelawmovil.viewModel.UserProfileState
 import com.example.justicelawmovil.viewModel.UserProfileViewModel
 import com.google.accompanist.permissions.rememberPermissionState
@@ -103,11 +108,14 @@ fun ProfileScreen(navController: NavController,
                   countryViewModel: CountryViewModel = viewModel(),
                   stateViewModel: StateViewModel = viewModel(),
                   cityViewModel: CityViewModel = viewModel(),
-                  userProfileViewModel: UserProfileViewModel = viewModel()) {
+                  userProfileViewModel: UserProfileViewModel = viewModel(),
+                  updateProfileViewModel: UpdateProfileViewModel = viewModel(),
+) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    val updateProfileState by updateProfileViewModel.updateProfileState.observeAsState(UpdateProfileState.Idle)
 
 
     val meState by viewModel.meState.observeAsState()
@@ -346,35 +354,38 @@ fun ProfileScreen(navController: NavController,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    val imageModifier = Modifier
-                        .size(100.dp)
-                        .padding(bottom = 13.dp)
-                        .clickable {
-                            launcher.launch("image/*")
-                        }
 
                     Log.d("ProfileScreen", "ProfileImageUri: $profileImageUri")
 
-                    Image(
-                        painter = rememberImagePainter(
-                            data = profileImageUri,
-                            builder = {
-                                crossfade(true)
-                                placeholder(R.drawable.profile) // Imagen temporal
-                                error(R.drawable.profile) // Imagen de error
-                                listener(
-                                    onSuccess = { _, _ ->
-                                        Log.d("ImageLoader", "Image loaded successfully.")
-                                    },
-                                    onError = { _, result ->
-                                        Log.e("ImageLoader", "Error loading image: ${result.throwable}")
-                                    }
-                                )
-                            }
-                        ),
-                        contentDescription = "Perfil",
-                        modifier = imageModifier
-                    )
+                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+
+                        Image(
+                            painter = rememberImagePainter(
+                                data = profileImageUri,
+                                builder = {
+                                    crossfade(true)
+                                    placeholder(R.drawable.profile) // Imagen temporal
+                                    error(R.drawable.profile) // Imagen de error
+                                    listener(
+                                        onSuccess = { _, _ ->
+                                            Log.d("ImageLoader", "Image loaded successfully.")
+                                        },
+                                        onError = { _, result ->
+                                            Log.e(
+                                                "ImageLoader",
+                                                "Error loading image: ${result.throwable}"
+                                            )
+                                        }
+                                    )
+                                }
+                            ),
+                            contentDescription = "Perfil",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clickable { launcher.launch("image/*") }
+                                .border(2.dp, Color.Gray, CircleShape)
+                        )
+                    }
 
 
 
@@ -679,25 +690,57 @@ fun ProfileScreen(navController: NavController,
 
 
                     Spacer(modifier = Modifier.height(8.dp))
+
+
+                    when (updateProfileState) {
+                        is UpdateProfileState.Loading -> {
+                            // Mostrar un indicador de carga
+                            Log.d("UpdateProfileState", "Cargando...")
+                        }
+                        is UpdateProfileState.Success -> {
+                            // Mostrar el mensaje de éxito
+                            Toast.makeText(context, "Perfil actualizado con éxito", Toast.LENGTH_SHORT).show()
+                        }
+                        is UpdateProfileState.Error -> {
+                            // Mostrar el mensaje de error
+                            Toast.makeText(context, "Error: ${(updateProfileState as UpdateProfileState.Error).message}", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            // Estado Idle, puedes no hacer nada o mostrar el contenido normal
+                        }
+                    }
+
                     androidx.compose.material3.Button(
                         onClick = {
-                            val selectedCountryId = countries.find { it.name == selectedCountry }?.id
-                            val selectedStateId = states.find { it.name == selectedState }?.id
-                            val selectedCityId = cities.find { it.name == selectedCity }?.id
 
-                            val userProfileModel = UserProfileModel(
-                                id = userProfileState?.let { (it as? UserProfileState.Success)?.user?.id } ?: 0,
-                                cell_phone = cellPhone,
-                                country_id = selectedCountryId,
-                                state_id = selectedStateId,
-                                city_id = selectedCityId,
-                                photo = profileImageUri,
-                                user_id = userProfileState?.let { (it as? UserProfileState.Success)?.user?.user_id } ?: 0, // Asignar user_id del perfil
-                                createdAt = userProfileState?.let { (it as? UserProfileState.Success)?.user?.createdAt } ?: "",
-                                updatedAt = userProfileState?.let { (it as? UserProfileState.Success)?.user?.updatedAt } ?: ""
-                            )
+                            Log.d("Button", "Botón de guardar presionado ifff")
+                            val selectedCountryId = countries.firstOrNull { it.name == selectedCountry }?.id
+                            val selectedStateId = states.firstOrNull { it.name == selectedState }?.id
+                            val selectedCityId = cities.firstOrNull { it.name == selectedCity }?.id
 
-                            userProfileViewModel.updateUserProfile(context, userProfileModel)
+                            // Validación de selección
+                            if (selectedCountryId == null || selectedStateId == null || selectedCityId == null) {
+                                Toast.makeText(context, "Por favor selecciona todos los campos", Toast.LENGTH_SHORT).show()
+
+                            }else {
+
+                                Log.d("Button", "Botón de guardar presionado else")
+
+                                // Creación del request con los valores seleccionados
+                                val request = UpdateProfileRequest(
+                                    cell_phone = cellPhone,
+                                    country_id = selectedCountryId,
+                                    state_id = selectedStateId,
+                                    city_id = selectedCityId,
+                                    profile_photo = null
+                                )
+
+                                Log.d("Button", "Request: cell_phone = $cellPhone, country_id = $selectedCountryId, state_id = $selectedStateId, city_id = $selectedCityId, profile_photo = $profileImageUri")
+
+
+                                // Llamada al ViewModel para actualizar el perfil
+                                updateProfileViewModel.updateUserProfile(context, request)
+                            }
                         },
                         modifier = Modifier
                             .padding(20.dp)
