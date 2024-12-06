@@ -55,13 +55,15 @@ import com.example.justicelawmovil.viewModel.RegisterViewModel
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import com.example.justicelawmovil.service.RegisterLawyerRequest
+import com.example.justicelawmovil.viewModel.RegisterLawyerState
+import com.example.justicelawmovil.viewModel.RegisterLawyerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-    val state by viewModel.registerState.collectAsState()
+fun RegisterLawyerScreen(navController: NavController, viewModel: RegisterLawyerViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    val state by viewModel.registerLawyerState.collectAsState()
     val typeDocuments by viewModel.typeDocuments.collectAsState()
 
     var name by remember { mutableStateOf("") }
@@ -108,41 +110,14 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
                 modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
             )
 
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp)
-            ) {
-                OutlinedButton(
-                    onClick = {
-                        navController.navigate(NavigationItem.Login.route)
-                    },
-                    shape = RoundedCornerShape(50),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(40.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFF001C36)
-                    ),
-                    border = BorderStroke(1.dp, Color(0xFF001C36))
-                ) {
-                    Text(text = "Iniciar Sesion")
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Button(
-                    onClick = { },
-                    colors = ButtonDefaults.buttonColors(Color(0xFF001C36)),
-                    shape = RoundedCornerShape(50),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(40.dp)
-                ) {
-                    Text(text = "Registrarse", color = Color.White)
-                }
-            }
+            Text(
+                text = "Únete a la Red de Expertos Jurídicos",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 20.sp,
+                    color = Color(0xFF001C36)
+                ),
+                modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+            )
 
             OutlinedTextField(
                 value = name,
@@ -228,16 +203,16 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
                     if (selectedTypeDocument != null) {
                         Log.d("Register", "Registering user with document type ID: ${selectedTypeDocument!!.id}")
-                        viewModel.registerUser(
-                            RegisterRequest(
+                        viewModel.registerLawyer(
+                            RegisterLawyerRequest(
                                 name = name,
-                                last_name = lastName,
+                                last_names = lastName,
                                 type_document_id = selectedTypeDocument!!.id.toString(),
                                 document_number = documentNumber,
                                 email = email,
@@ -256,24 +231,9 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "¿Quieres trabajar con nosotros?",
-                style = TextStyle(
-                    color = Color(0xFFCF9E3E),
-                    fontSize = 18.sp
-                ),
-                modifier = androidx.compose.ui.Modifier
-                    .clickable {
-
-                        navController.navigate(NavigationItem.RegisterLawyer.route)
-                    }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             when (val registerState = state) {
-                is RegisterState.Loading -> Text("Cargando...")
-                is RegisterState.Success -> {
+                is RegisterLawyerState.Loading -> Text("Cargando...")
+                is RegisterLawyerState.Success -> {
                     showSuccessMessage = true
                     LaunchedEffect(Unit) {
                         kotlinx.coroutines.delay(2000) // Esperar 2 segundos
@@ -281,7 +241,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
                         navController.navigate(NavigationItem.Login.route) // Navegar al login después de mostrar el mensaje
                     }
                 }
-                is RegisterState.Error -> Text(registerState.error, color = Color.Red)
+                is RegisterLawyerState.Error -> Text(registerState.error, color = Color.Red)
                 else -> {}
             }
 
@@ -290,10 +250,4 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterScreenPreview() {
-    RegisterScreen(rememberNavController())
 }
