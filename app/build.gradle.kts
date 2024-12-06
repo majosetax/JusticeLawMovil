@@ -70,7 +70,15 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-extended:1.4.0")
     implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
     implementation("io.coil-kt:coil-compose:2.4.0") // Verifica la última versión disponible
+// Retrofit library
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
+// OkHttp library for making HTTP requests
+    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+
+// Gson library for JSON parsing
+    implementation ("com.google.code.gson:gson:2.8.9")
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

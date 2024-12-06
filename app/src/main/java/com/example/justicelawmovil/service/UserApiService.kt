@@ -2,6 +2,7 @@ package com.example.justicelawmovil.service
 
 import com.example.justicelawmovil.model.CityModel
 import com.example.justicelawmovil.model.CountryModel
+import com.example.justicelawmovil.model.ForumQuestion
 import com.example.justicelawmovil.model.StateModel
 import com.example.justicelawmovil.model.TypeDocumentModel
 import com.example.justicelawmovil.model.UserModel
@@ -105,6 +106,10 @@ interface UserApiService {
 
     @GET("getprofile")
     suspend fun getProfile(@Header("Authorization") token: String): Response<UserProfileModel>
+
+    @GET("questions")
+    suspend fun getForumQuestions(@Header("Authorization") token: String): List<ForumQuestion>
+
 
     @POST("profile")
     suspend fun updateProfile(
